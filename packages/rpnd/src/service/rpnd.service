@@ -1,0 +1,17 @@
+[Unit]
+Description=RPND Node Daemon
+After=network.target
+Requires=armhwinfo.service
+
+[Service]
+Type=forking
+PIDFile=/var/run/rpnd.pid
+User=root
+Group=root
+WorkingDirectory=/opt/rpnd
+ExecStart=/opt/rpnd/start.sh start
+ExecStop=/opt/rpnd/start.sh stop
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

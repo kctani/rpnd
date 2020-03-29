@@ -1,0 +1,21 @@
+{
+  "name": "rpnd",
+  "version": "0.0.1",
+  "description": "Embedded mqtt driven controller",
+  "main": "app/rpnd.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": "",
+  "bugs": "",
+  "contributors": "",
+  "repository": "https://github.com/kctani/rpnd",
+  "homepage": "",
+  "dependencies": {
+    "mqtt": "^2.15.3",
+    "onoff": "^1.2.0"
+  },
+  "engines": "",
+  "author": "Ken",
+  "license": "gplv3"
+}

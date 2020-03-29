@@ -1,0 +1,53 @@
+/*
+ *	rpnd specific css
+ */
+.sts_object {
+  display: table;
+  border-collapse: inherit;
+  border-left: 1px solid grey;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.sts_property {
+  display: table-row;
+  margin: 0;
+  padding: 0;
+}
+
+.sts_key {
+  display: table-cell;
+  text-align: right;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0.2em 0.5em 0.2em 0.5em;
+  width: 15%;
+  font-weight: bold;
+}
+
+.sts_value {
+  display: table-cell;
+  text-align: left;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0.1em 0.5em 0.1em 0.5em;
+  border-left: 1px solid grey;
+  border-radius: 10px;
+}
+
+/*
+ *	form.js GridSection sorting
+ */
+.cbi-section-table-column-sortable {}
+
+.cbi-colum-sorted-none::after {
+  content: ' \21D5';
+}
+
+.cbi-colum-sorted-asc::after {
+  content: ' \21D1';
+}
+
+.cbi-colum-sorted-desc::after {
+  content: ' \21D3';
+}

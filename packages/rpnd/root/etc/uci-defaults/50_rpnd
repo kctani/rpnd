@@ -1,0 +1,8 @@
+#!/bin/sh
+uci -q batch << EOF
+
+
+
+exit
+EOF
+exit 0

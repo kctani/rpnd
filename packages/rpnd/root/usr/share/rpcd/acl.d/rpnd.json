@@ -1,0 +1,13 @@
+{
+  "rpnd": {
+    "description": "Grant file upload access to /tmp/rpnd/*",
+    "write": {
+      "cgi-io": ["upload"],
+      "file": {
+        "/tmp/rpnd/status": ["read"],
+        "/tmp/rpnd/config": ["read"],
+        "/tmp/rpnd/mqtt-in": ["write"],
+      }
+    }
+  }
+}
