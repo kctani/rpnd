@@ -1,8 +1,10 @@
 #!/bin/sh
 uci -q batch << EOF
-
-
-
+set wireless.radio0.disabled=0
+set wireless.radio0.ssid=Rpnd-Setup
+commit
 exit
 EOF
+echo dtoverlay=gpio-no-irq >> /boot/config.txt
+service network restart
 exit 0
