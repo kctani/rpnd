@@ -56,7 +56,7 @@ Mrpio.run = () => {
   rpnd.info('M-Rpio starting');
 
   rpio.init({
-    gpiomem: true,
+    gpiomem: false,
     mapping: 'physical',
     mock: undefined
   });

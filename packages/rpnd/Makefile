@@ -15,7 +15,7 @@ include $(INCLUDE_DIR)/package.mk
 # Package definition; instructs on how and where our package will appear in the overall configuration menu ('make menuconfig')
 define Package/rpnd
 	SECTION:=utils
-	CATEGORY:=Tani
+	CATEGORY:=IOT
 	TITLE:=RPND Rp NodeJs Controller
 endef
 

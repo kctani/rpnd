@@ -2,6 +2,7 @@
 uci -q batch << EOF
 set wireless.radio0.disabled=0
 set wireless.default_radio0.ssid=Rpnd-Setup
+set network.lan.ipaddr=192.168.77.1
 commit
 exit
 EOF
