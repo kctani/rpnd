@@ -68,7 +68,6 @@ var updateStatus = () => {
     fs.writeFileSync(statuspath, JSON.stringify(RPND.status) + '\n');
   } catch (e) {
     RPND.log('Status file error', e);
-    sint.cancel();
   }
 }
 

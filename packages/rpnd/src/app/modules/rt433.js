@@ -14,7 +14,7 @@ var args = [
 var config;
 
 const handlers = {
-  'Acurite tower sensor': (event) => {
+  'Acurite-Tower': (event) => {
     return {
       'name': 'txr592',
       'id': event.id,
@@ -25,7 +25,7 @@ const handlers = {
       }
     };
   },
-  'HIDEKI TS04 sensor': (event) => {
+  'Hideki-TS04': (event) => {
     return {
       'name': 'ts04',
       'id': event.channel,
@@ -61,7 +61,8 @@ const handlers = {
     return {
       'name': 'unhandled',
       'topic': 'ken/rt433/unhandled',
-      'data': data
+      'data': data,
+      "id": "unhandled"
     };
   }
 };
@@ -70,7 +71,9 @@ var Mrt433 = {};
 
 Mrt433.status = {
   'mode': 'starting',
-  'device': {}
+  'device': {
+    'unhandled': {}
+  }
 };
 
 Mrt433.uciConfig = (uciConf) => {
@@ -150,7 +153,8 @@ Mrt433.run = () => {
           topic: msg.topic,
           msg: msg.data
         };
-        rpnd.mqtt.publish(msg.topic, String(msg.data));
+        if (typeof(msg.data) != 'string')  msg.data = JSON.stringify(msg.data);
+        rpnd.mqtt.publish(msg.topic, msg.data);
       }
     }
   });

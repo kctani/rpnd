@@ -26,7 +26,7 @@ wget https://raw.githubusercontent.com/kctani/rpnd/master/support/feeds.conf
 rm package/feeds/packages/node* # †
 ./scripts/feeds install -a -p node
 cp feeds/rpnd/support/.config .
-make defineconfig
+make defconfig
 ~~~
 † See [github.com/nxhack/openwrt-node-packages](https://github.com/nxhack/openwrt-node-packages)
 
