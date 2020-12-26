@@ -86,6 +86,7 @@ RPND.start = () => {
   const uciConfig = require('./config-uci').loadConfig();
 
   var modsAvailable = fs.readdirSync(path.dirname(require.main.filename) + '/modules').filter(fn => fn.endsWith('.js')).map(m => m.slice(0, -3));
+  RPND.debug('Mods available', modsAvailable);
   var modsEnabled = ['mqtt', 'idle'].concat(uciConfig.rpnd.modules_enabled || []);
   modsEnabled = (modsEnabled || modsAvailable).filter(value => modsAvailable.includes(value));
 

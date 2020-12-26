@@ -12,6 +12,10 @@ try {
 	return;
 }
 
+const PIN = {
+	SDA: 2,
+	SCL: 3,
+}
 var Mrpio = {};
 var config;
 var status = {
@@ -24,7 +28,21 @@ Mrpio.uciConfig = (uciConf) => {
 			debounce: uciConf.gpio.debounce || 0,
 			pins: []
 		};
-		([].concat(uciConf.gpio_pin)).forEach((pin) => {
+		if (uciConf.gpio_i2c) {
+			config.pins.push({
+				number: PIN.SDA,
+				direction: 'I2C'
+			}, {
+				number: PIN.SCL,
+				direction: 'I2C'
+			});
+			config.i2c = {
+				mode: 'MQTT',
+				topic: uciConf.sys.root_topic + uciConf.gpio.topic_prefix + '/' + (uciConf.ic2_topic || 'ic2'),
+				baudRate: 10000,
+			};
+		}
+		([].concat(uciConf.gpio_pin)).sort((a, b) => a.number >= b.number).forEach((pin) => {
 			var pin = {
 				number: pin.number,
 				direction: pin.direction,
@@ -37,7 +55,10 @@ Mrpio.uciConfig = (uciConf) => {
 					pull: { 'UP': rpio.PULL_UP, 'DOWN': rpio.PULL_DOWN, 'NONE': rpio.PULL_OFF } [pin.pull] || rpio.PULL_OFF,
 				},
 			}
-			config.pins.push(pin);
+			if (config.pins.find(({ number }) => number == pin.number))
+				rpnd.warn('Rpio: Duplicate pin defined: ' + pin.number);
+			else
+				config.pins.push(pin);
 		});
 	}
 	return config;
@@ -54,13 +75,17 @@ Mrpio.run = () => {
 
 	config.pins.forEach((pin) => {
 		try {
-			if (pin.direction == 'OUT')
-				pin.gpio = rpio.open(pin.number, rpio.OUTPUT, pin.opts.initial_level);
-			else
-				pin.gpio = rpio.open(pin.number, rpio.INPUT, pin.opts.pull);
+			switch (pin.direction || 'N/A') {
+				case 'IN':
+					pin.gpio = rpio.open(pin.number, rpio.INPUT, pin.opts.pull);
+					break;
+				case 'OUT':
+					pin.gpio = rpio.open(pin.number, rpio.OUTPUT, pin.opts.initial_level);
+					break;
+			}
 		} catch (e) {
 			rpnd.warn('Rpio: Can not initialize pin : ' + e.message);
-			pin.direction = 'disabled';
+			pin.direction = 'DISABLED';
 		}
 		var psts = {
 			direction: pin.direction,
@@ -100,13 +125,31 @@ Mrpio.run = () => {
 				}
 				rpnd.mqtt.subscribe(pin.topic, writePin);
 				break;
-			case 'NONE':
+			case 'I2C':
+				psts = 'I2C';
 				break;
 			default:
 				rpnd.warn(`Rpio: Pin ${pin.number} invalid direction - ${pin.direction}`);
+				psts = pin.direction
 		}
 	});
+
+	if (config.i2c) {
+		rpio.i2cBegin();
+		rpio.i2cSetBaudRate(config.i2c.baudRate);
+		var i2cWrite = (topic, payload) => {
+			rpio.i2cWrite(Buffer.from(payload))
+		}
+		rpnd.mqtt.subscribe(config.i2c.topic, i2cWrite);
+	}
 };
+
+var i2c = {};
+i2c.begin = rpio.i2cBegin;
+i2c.write = rpio.i2cWrite;
+i2c.read = rpio.i2cRead;
+
+Mrpio.i2c = i2c;
 
 Mrpio.status = status;
 
