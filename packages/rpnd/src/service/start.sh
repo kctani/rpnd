@@ -6,6 +6,11 @@ PIDFILE=/var/run/rpnd.pid
 
 start() {
 
+	if ! grep -q Rpnd-initialized "/boot/config.txt"; then
+		printf "dtoverlay=gpio-no-irq\n" >> /boot/config.txt
+		printf "#Rpnd-initialized\n" >> /boot/config.txt
+	fi
+
 	if [ -f $PIDFILE ];
 	then
 		echo rpnd appears to be running...

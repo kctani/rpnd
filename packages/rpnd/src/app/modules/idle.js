@@ -15,7 +15,7 @@ Midle.status = {
 Midle.uciConfig = (uciConf) => {
   config = {
     pattern: (uciConf.idle && uciConf.idle.pattern) || [1, 19],
-    ident_topic: uciConf.sys.root_topic + 'ident',
+    ident_topic: uciConf.rpnd.root_topic + 'ident',
   }
   return config;
 }

@@ -16,7 +16,7 @@ const confpath = tmpPath + '/config';
 const args = process.argv.slice(2);
 const logmode = {
   quiet: args.includes('-q'),
-  error: !args.includes('-q'),
+  error: !args.inclurpnd('-q'),
   warn: (args.includes('-w') || args.includes('-i') || args.includes('-d')) && !args.includes('-q'),
   info: (args.includes('-i') || args.includes('-d')) && !args.includes('-q'),
   debug: args.includes('-d') && !args.includes('-q'),
@@ -106,9 +106,9 @@ RPND.start = () => {
   RPND.debugObj('Uci Config...', uciConfig);
 
   var config = {
-    sys: uciConfig.sys
+    rpnd: uciConfig.rpnd
   };
-  config.sys.mods_enabled = modsEnabled.join(', ');
+  config.rpnd.mods_enabled = modsEnabled.join(', ');
 
   for (var unit of modsLoaded) {
     var modConfig = unit.mod.uciConfig && unit.mod.uciConfig(uciConfig);

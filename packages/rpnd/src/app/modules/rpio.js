@@ -38,7 +38,7 @@ Mrpio.uciConfig = (uciConf) => {
 			});
 			config.i2c = {
 				mode: 'MQTT',
-				topic: uciConf.sys.root_topic + uciConf.gpio.topic_prefix + '/' + (uciConf.ic2_topic || 'ic2'),
+				topic: uciConf.rpnd.root_topic + uciConf.gpio.topic_prefix + '/' + (uciConf.ic2_topic || 'ic2'),
 				baudRate: 10000,
 			};
 		}
@@ -46,7 +46,7 @@ Mrpio.uciConfig = (uciConf) => {
 			var pin = {
 				number: pin.number,
 				direction: pin.direction,
-				topic: uciConf.sys.root_topic + uciConf.gpio.topic_prefix + '/' + pin.topic,
+				topic: uciConf.rpnd.root_topic + uciConf.gpio.topic_prefix + '/' + pin.topic,
 				levels: [pin.level_low, pin.level_high],
 				opts: {
 					edge: { 'UP': rpio.POLL_HIGH, 'DOWN': rpio.POLL_LOW, 'BOTH': rpio.POLL_BOTH } [pin.edge] || rpio.POLL_BOTH,

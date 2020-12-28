@@ -29,9 +29,9 @@ Mmqtt.uciConfig = (uciConf) => {
       opts: {
         username: uciConf.mqtt.username,
         password: uciConf.mqtt.password,
-        client_id: uciConf.mqtt.client_id || 'rpnd_' + uciConf.sys.node_id
+        client_id: uciConf.mqtt.client_id || 'rpnd_' + uciConf.rpnd.node_id
       },
-      status_topic: uciConf.sys.root_topic + uciConf.mqtt.status_topic,
+      status_topic: uciConf.rpnd.root_topic + uciConf.mqtt.status_topic,
       status_up: 'UP',
       status_down: 'DOWN'
     };

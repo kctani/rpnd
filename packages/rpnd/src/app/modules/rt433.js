@@ -84,7 +84,7 @@ Mrt433.uciConfig = (uciConf) => {
     config.device = {};
     if (uciConf.rt433.protocols_enabled.includes('txr592')) {
       config.device.txr592 = {
-        topic: uciConf.sys.root_topic + uciConf.rt433.txr592_topic + '/'
+        topic: uciConf.rpnd.root_topic + uciConf.rt433.txr592_topic + '/'
       };
       rpnd.debugObj('config.device.txr592', config.device.txr592);
       args = args.concat(['-R', '40']);
@@ -93,19 +93,19 @@ Mrt433.uciConfig = (uciConf) => {
 
     if (uciConf.rt433.protocols_enabled.includes('ts04')) {
       config.device.ts04 = {
-        topic: uciConf.sys.root_topic + uciConf.rt433.ts04_topic + '/'
+        topic: uciConf.rpnd.root_topic + uciConf.rt433.ts04_topic + '/'
       };
       args = args.concat(['-R', '42']);
       Mrt433.status.device.ts04 = {};
     }
     if (uciConf.rt433.protocols_enabled.includes('zap')) {
       config.device.ZAP = {
-        learn_topic: uciConf.rt433.zap_learn_topic && uciConf.sys.root_topic + 'zap/' + (uciConf.rt433.zap_learn_topic),
+        learn_topic: uciConf.rt433.zap_learn_topic && uciConf.rpnd.root_topic + 'zap/' + (uciConf.rt433.zap_learn_topic),
         codes: {}
       };
       ([].concat(uciConf.rt433_zap_code || [])).forEach((code) => {
         config.device.ZAP.codes[code.code] = {
-          topic: (code.abolute_topic == '1' ? '' : (uciConf.sys.root_topic + 'zap/')) + code.topic,
+          topic: (code.abolute_topic == '1' ? '' : (uciConf.rpnd.root_topic + 'zap/')) + code.topic,
           data: code.value,
           id: code.code
         };

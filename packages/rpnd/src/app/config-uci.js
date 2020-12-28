@@ -66,7 +66,7 @@ UCI.loadConfig = (envname) => {
     }
   });
   var alias = opt.rpnd.node_alias || 'rpnd';
-  opt.sys = {
+  opt.rpnd = {
     alias: alias,
     node_id: opt.rpnd.node_id || id,
     node_name: (opt.rpnd && opt.rpnd.node_name) || ('node-' + alias),

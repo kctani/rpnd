@@ -30,7 +30,7 @@ Mwire.uciConfig = (uciConf) => {
     ([].concat(uciConf.wire_device || [])).forEach((device) => {
       config.devices.push({
         id: device.id,
-        topic: uciConf.sys.root_topic + uciConf.wire.topic + '/' + device.id,
+        topic: uciConf.rpnd.root_topic + uciConf.wire.topic + '/' + device.id,
       });
       Mwire.status.device[device.id] = {
         value: 'na',
