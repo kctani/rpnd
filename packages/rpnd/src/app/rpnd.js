@@ -16,7 +16,7 @@ const confpath = tmpPath + '/config';
 const args = process.argv.slice(2);
 const logmode = {
   quiet: args.includes('-q'),
-  error: !args.inclurpnd('-q'),
+  error: !args.includes('-q'),
   warn: (args.includes('-w') || args.includes('-i') || args.includes('-d')) && !args.includes('-q'),
   info: (args.includes('-i') || args.includes('-d')) && !args.includes('-q'),
   debug: args.includes('-d') && !args.includes('-q'),
