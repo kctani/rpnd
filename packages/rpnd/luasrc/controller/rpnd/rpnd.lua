@@ -22,7 +22,10 @@ function index()
   page = entry({"admin", "rpnd", "rt433"}, view("rpnd/rt433"), _("RTL 433"), 40)
   page.uci_depends = { rpnd = { ["@rpnd[0]"] = { ["modules_enabled"] = "rt433" } } }
 
-  page = entry({"admin", "rpnd", "wire"}, view("rpnd/wire"), _("One Wire"), 50)
+  page = entry({"admin", "rpnd", "i2c"}, view("rpnd/i2c"), _("I2C Bus"), 50)
+  page.uci_depends = { rpnd = { ["@rpnd[0]"] = { ["modules_enabled"] = "i2c" } } }
+
+  page = entry({"admin", "rpnd", "wire"}, view("rpnd/wire"), _("One Wire"), 60)
   page.uci_depends = { rpnd = { ["@rpnd[0]"] = { ["modules_enabled"] = "wire" } } }
 
   page = entry({"admin", "rpnd", "diagnostic"}, view("rpnd/diagnostic"), _("Diagnostics"), 60)

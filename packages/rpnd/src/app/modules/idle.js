@@ -9,7 +9,8 @@ var Midle = {};
 var config;
 
 Midle.status = {
-  'uptime': 0
+  'uptime': 0,
+  'temp': 0.0
 }
 
 Midle.uciConfig = (uciConf) => {
@@ -27,6 +28,7 @@ var ledOn = (level) => {
 };
 
 var uptime = 0;
+var date = new Date(0);
 
 Midle.run = function() {
   rpnd.info('M-Idle starting');
@@ -49,10 +51,22 @@ Midle.run = function() {
       }
     }
     uptime++;
-    var date = new Date(0);
+  }, 100);
+  var procStat = {
+    name: '',
+    state: '',
+    voluntary_ctxt_switches: '',
+    nonvoluntary_ctxt_switches: '',
+  }
+  setInterval(() => {
+    var temp = fs.readFileSync('/sys/class/thermal/thermal_zone0/temp');
+    Midle.status.temp = (temp/1000).toFixed(1).toString() + '&#176;';
+    Midle.status['cpu loadavg'] = fs.readFileSync('/proc/loadavg').toString();
+
     date.setSeconds(uptime / 10);
     Midle.status.uptime = '' + Math.floor(uptime / 864000) + 'd ' + date.toISOString().substr(11, 8);
-  }, 100);
+
+  }, 1000);
   rpnd.mqtt.subscribe(config.ident_topic, (topic, payload) => {
     level = 0;
     cycle = 0;

@@ -33,6 +33,7 @@ return L.view.extend({
     o = s.option(form.MultiValue, 'modules_enabled', _('Module'), _('Selects modules to load'));
     o.value('rpio', 'Gpio General purpose io');
     o.value('rt433', 'RT 433 receiver');
+    o.value('i2c', 'I2C Bus');
     o.value('wire', 'OneWire serial bus');
     o.optional = true;
 

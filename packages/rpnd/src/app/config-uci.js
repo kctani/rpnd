@@ -65,13 +65,14 @@ UCI.loadConfig = (envname) => {
         break;
     }
   });
-  var alias = opt.rpnd.node_alias || 'rpnd';
-  opt.rpnd = {
-    alias: alias,
-    node_id: opt.rpnd.node_id || id,
-    node_name: (opt.rpnd && opt.rpnd.node_name) || ('node-' + alias),
-    root_topic: (opt.mqtt.root_topic || 'rpnd') + '/' + alias + '/',
-  }
+
+  opt.rpnd = opt.rpnd || {};
+  opt.mqtt = opt.mqtt || {};
+  opt.rpnd.alias = opt.rpnd.node_alias || 'rpnd';
+  opt.rpnd.node_id = opt.rpnd.node_id || id;
+  opt.rpnd.node_name = opt.rpnd.node_name || ('node-' + opt.rpnd.alias);
+  opt.rpnd.root_topic = (opt.mqtt.root_topic || 'rpnd') + '/' + opt.rpnd.alias + '/';
+
   return opt;
 };
 
