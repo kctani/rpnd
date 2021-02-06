@@ -1,0 +1,17 @@
+{
+  "cname": {
+    "description": "Grant uci r/w access, file r/w access to /tmp/cname/*",
+    "read": {
+      "uci": ["cname"]
+    },
+    "write": {
+      "uci": ["cname"],
+      "cgi-io": ["upload"],
+      "file": {
+        "/tmp/cname/status": ["read"],
+        "/tmp/cname/config": ["read"],
+        "/tmp/cname/mqtt-in": ["write"]
+      }
+    }
+  }
+}
