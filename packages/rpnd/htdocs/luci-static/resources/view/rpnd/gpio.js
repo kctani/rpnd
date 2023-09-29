@@ -1,7 +1,7 @@
-'use strict';
-'require rpc';
-'require uci';
-'require form';
+'use strict'
+'require rpc'
+'require uci'
+'require form'
 
 var pins_pzw = [
 	[3, 'P03 (GPIO 02, I2C1 SDA, SMI SA3)'],
@@ -32,103 +32,103 @@ var pins_pzw = [
 	[37, 'P37 (GPIO 26, SD0 DAT2, TE0)'],
 	[38, 'P38 (GPIO 20, PCM DIN, SMI SD12)'],
 	[40, 'P40 (GPIO 21, PCM DOUT, SMI SD13)'],
-];
+]
 
 return L.view.extend({
-	load: function() {
+	load: function () {
 
 	},
-	render: function(load_rpc_values) {
+	render: function (load_rpc_values) {
 
 		try {
 			document.head.appendChild(E('link', {
 				'rel': 'stylesheet',
 				'href': '/luci-static/resources/view/rpnd/rpnd.css'
-			}));
-		} catch (e) {}
+			}))
+		} catch (e) { }
 
-		var m, s, o, ss, so;
+		var m, s, o, ss, so
 
-		m = new form.Map('rpnd', _('Configuration'), _('IOT gpio manager'));
+		m = new form.Map('rpnd', _('Configuration'), _('IOT gpio manager'))
 
-		s = m.section(form.TypedSection, 'gpio', _('Gpio'));
-		s.anonymous = true;
-		s.addremove = false;
+		s = m.section(form.TypedSection, 'gpio', _('Gpio'))
+		s.anonymous = true
+		s.addremove = false
 
-		o = s.option(form.Value, 'debounce', _('Debounce timer (ms)'));
-		o.optional = false;
-		o.placeholder = '10';
-		o.datatype = 'number';
+		o = s.option(form.Value, 'debounce', _('Debounce timer (ms)'))
+		o.optional = false
+		o.placeholder = '10'
+		o.datatype = 'number'
 
-		o = s.option(form.Value, 'topic_prefix', _('Prefix for gpio topic'));
-		o.optional = false;
-		o.datatype = 'string';
+		o = s.option(form.Value, 'topic_prefix', _('Prefix for gpio topic'))
+		o.optional = false
+		o.datatype = 'string'
 
 		o = s.option(form.SectionValue, '__pins__', form.GridSection, 'gpio_pin', null,
-			_('Pins'));
+			_('Pins'))
 
-		ss = o.subsection;
+		ss = o.subsection
 
-		ss.addremove = true;
-		ss.anonymous = true;
-		ss.sortable = true;
+		ss.addremove = true
+		ss.anonymous = true
+		ss.sortable = true
 
-		so = ss.option(form.Value, 'number', _('Physical pin number'));
-		so.datatype = 'number';
-		so.sortable = true;
-		so.rmempty = true;
-		so.sortmode = 'num';
-		for (var pin of pins_pzw) so.value(pin[0], pin[0].toString() + ' - ' + pin[1]);
+		so = ss.option(form.Value, 'number', _('Physical pin number'))
+		so.datatype = 'number'
+		so.sortable = true
+		so.rmempty = true
+		so.sortmode = 'num'
+		for (var pin of pins_pzw) so.value(pin[0], pin[0].toString() + ' - ' + pin[1])
 
-		so = ss.option(form.ListValue, 'direction', _('Direction'));
-		so.datatype = 'string';
-		so.sortable = true;
-		so.rmempty = false;
-		so.value("IN", "IN");
-		so.value("OUT", "OUT");
+		so = ss.option(form.ListValue, 'direction', _('Direction'))
+		so.datatype = 'string'
+		so.sortable = true
+		so.rmempty = false
+		so.value("IN", "IN")
+		so.value("OUT", "OUT")
 
-		so = ss.option(form.Value, 'topic', _('Topic suffix'));
-		so.datatype = 'string';
-		so.sortable = true;
-		so.rmempty = false;
+		so = ss.option(form.Value, 'topic', _('Topic suffix'))
+		so.datatype = 'string'
+		so.sortable = true
+		so.rmempty = false
 
-		so = ss.option(form.Value, 'level_high', _('High name'));
-		so.datatype = 'string';
-		so.sortable = true;
-		so.rmempty = false;
+		so = ss.option(form.Value, 'level_high', _('High name'))
+		so.datatype = 'string'
+		so.sortable = true
+		so.rmempty = false
 
-		so = ss.option(form.Value, 'level_low', _('Low name'));
-		so.datatype = 'string';
-		so.sortable = true;
-		so.rmempty = false;
+		so = ss.option(form.Value, 'level_low', _('Low name'))
+		so.datatype = 'string'
+		so.sortable = true
+		so.rmempty = false
 
-		so = ss.option(form.ListValue, 'initial_level', _('Initial Level'));
-		so.datatype = 'string';
-		so.sortable = true;
-		so.rmempty = false;
-		so.depends('direction', 'OUT');
-		so.value('LOW', 'LOW');
-		so.value('HIGH', 'HIGH');
+		so = ss.option(form.ListValue, 'initial_level', _('Initial Level'))
+		so.datatype = 'string'
+		so.sortable = true
+		so.rmempty = false
+		so.depends('direction', 'OUT')
+		so.value('LOW', 'LOW')
+		so.value('HIGH', 'HIGH')
 
-		so = ss.option(form.ListValue, 'pull', _('Pull up/down'));
-		so.datatype = 'string';
-		so.sortable = true;
-		so.rmempty = false;
-		so.value('UP', 'UP');
-		so.value('DOWN', 'DOWN');
-		so.value('NONE', 'NONE');
-		so.depends('direction', 'IN');
+		so = ss.option(form.ListValue, 'pull', _('Pull up/down'))
+		so.datatype = 'string'
+		so.sortable = true
+		so.rmempty = false
+		so.value('UP', 'UP')
+		so.value('DOWN', 'DOWN')
+		so.value('NONE', 'NONE')
+		so.depends('direction', 'IN')
 
-		so = ss.option(form.ListValue, 'edge', _('Edge'));
-		so.datatype = 'string';
-		so.sortable = true;
-		so.rmempty = false;
-		so.depends('direction', 'IN');
-		so.value("UP", "UP");
-		so.value("DOWN", "DOWN");
-		so.value("BOTH", "BOTH");
+		so = ss.option(form.ListValue, 'edge', _('Edge'))
+		so.datatype = 'string'
+		so.sortable = true
+		so.rmempty = false
+		so.depends('direction', 'IN')
+		so.value("UP", "UP")
+		so.value("DOWN", "DOWN")
+		so.value("BOTH", "BOTH")
 
-		return m.render();
+		return m.render()
 
 	}
-});
+})

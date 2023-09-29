@@ -3,21 +3,21 @@
  */
 
 if (process.platform !== 'linux') {
-	console.log('M-Gpio not available on this platform');
+	console.log('M-Gpio not available on this platform')
 }
-const rpnd = require('../rpnd');
+const rpnd = require('../rpnd')
 
-var onoff;
+var onoff
 try {
-	onoff = require('onoff');
+	onoff = require('onoff')
 } catch (e) {
-	rpnd.log('M-gpio - disabled - onoff not available');
+	rpnd.log('M-gpio - disabled - onoff not available')
 }
 
 if (onoff) {
-	var Mgpio = {};
-	var pins = [];
-	var config;
+	var Mgpio = {}
+	var pins = []
+	var config
 
 	Mgpio.uciConfig = (uciConf) => {
 		if (uciConf.gpio && uciConf.gpio_pin && !uciConf.gpio.disabled) {
@@ -35,48 +35,48 @@ if (onoff) {
 					opts: {
 						debounceTimeout: pin.debounce || config.gpio.debounce
 					}
-				});
-			});
-			pins = config.gpio.pins;
+				})
+			})
+			pins = config.gpio.pins
 		}
-		return config;
-	};
+		return config
+	}
 
 	Mgpio.run = () => {
-		console.log('M-Gpio starting');
+		console.log('M-Gpio starting')
 
 		pins.forEach((pin) => {
 			try {
-				pin.gpio = new onoff.Gpio(pin.number, pin.direction || 'in', pin.edge || 'none', pin.opts || {});
+				pin.gpio = new onoff.Gpio(pin.number, pin.direction || 'in', pin.edge || 'none', pin.opts || {})
 				switch (pin.direction) {
 					case 'in':
 						pin.gpio.watch((errv, value) => {
-							rpnd.mqtt.publish(pin.topic, '' + ((pin.levels && pin.levels[value]) || value));
-						});
-						break;
+							rpnd.mqtt.publish(pin.topic, '' + ((pin.levels && pin.levels[value]) || value))
+						})
+						break
 					case 'out':
 						rpnd.mqtt.subscribe(pin.topic, (topic, payload) => {
 							switch ('' + payload) {
 								case (pin.levels && pin.levels[0]) || '0':
 								case '0':
-									pin.gpio.writeSync(0);
-									break;
+									pin.gpio.writeSync(0)
+									break
 								case (pin.levels && pin.levels[1]) || '1':
 								case '1':
-									pin.gpio.writeSync(1);
-									break;
+									pin.gpio.writeSync(1)
+									break
 								default:
-									console.log('Undefined level : ' + payload);
+									console.log('Undefined level : ' + payload)
 							}
-						});
-						break;
+						})
+						break
 					default:
 				}
 			} catch (e) {
-				console.log('Can not allocate pin - ' + pin.number);
+				console.log('Can not allocate pin - ' + pin.number)
 			}
-		});
-	};
+		})
+	}
 
-	module.exports = Mgpio;
+	module.exports = Mgpio
 }

@@ -8,3 +8,5 @@ config gpio
 config rt433
 
 config wire
+
+config chime

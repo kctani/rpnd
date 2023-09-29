@@ -1,18 +1,18 @@
-'use strict';
+'use strict'
 
-const fs = require('fs');
-const path = require('path');
-const util = require('util');
+const fs = require('fs')
+const path = require('path')
+const util = require('util')
 const logger = new console.Console({
 	stdout: process.stdout,
 	stderr: process.stderr
-});
+})
 
-const tmpPath = '/tmp/rpnd';
-const statuspath = tmpPath + '/status';
-const confpath = tmpPath + '/config';
+const tmpPath = '/tmp/rpnd'
+const statuspath = tmpPath + '/status'
+const confpath = tmpPath + '/config'
 
-const args = process.argv.slice(2);
+const args = process.argv.slice(2)
 const logmode = {
 	quiet: args.includes('-q'),
 	error: !args.includes('-q'),
@@ -20,147 +20,147 @@ const logmode = {
 	info: (args.includes('-i') || args.includes('-d')) && !args.includes('-q'),
 	debug: args.includes('-d') && !args.includes('-q'),
 	monitor: args.includes('-m')
-};
+}
 
-var RPND = {};
+var RPND = {}
 
-RPND.tmpPath = tmpPath;
+RPND.tmpPath = tmpPath
 
 RPND.log = (...a) => {
-	if (!logmode.quiet) logger.log(...a);
-};
+	if (!logmode.quiet) logger.log(...a)
+}
 
 RPND.info = (...a) => {
-	if (logmode.info) logger.log(...a);
-};
+	if (logmode.info) logger.log(...a)
+}
 
 RPND.warn = (...a) => {
-	if (logmode.warn) logger.warn(...a);
-};
+	if (logmode.warn) logger.warn(...a)
+}
 
 RPND.error = (...a) => {
-	if (logmode.warn) logger.error(...a);
-};
+	if (logmode.warn) logger.error(...a)
+}
 
 RPND.debug = (...a) => {
-	if (logmode.debug) logger.debug(...a);
-};
+	if (logmode.debug) logger.debug(...a)
+}
 
 RPND.debugObj = (caption, obj) => {
 	if (logmode.debug) {
-		logger.log(caption);
+		logger.log(caption)
 		logger.dir(obj, {
 			depth: 8
-		});
+		})
 	}
-};
+}
 
 RPND.status = {
 	'rpnd': {
 		'mode': 'starting'
 	}
-};
+}
 
 var updateStatus = () => {
 	try {
-		fs.writeFileSync(statuspath, JSON.stringify(RPND.status) + '\n');
+		fs.writeFileSync(statuspath, JSON.stringify(RPND.status) + '\n')
 	} catch (e) {
-		RPND.log('Status file error', e);
+		RPND.log('Status file error', e)
 	}
-};
+}
 
-RPND.mods = [];
+RPND.mods = []
 
-module.exports = RPND;
+module.exports = RPND
 
 RPND.start = () => {
-	RPND.info('Main starting');
+	RPND.info('Main starting')
 
 	fs.mkdirSync(tmpPath, {
 		recursive: true
-	});
+	})
 
-	const uciConfig = require('./config-uci').loadConfig();
+	const uciConfig = require('./config-uci').loadConfig()
 
-	var modsAvailable = fs.readdirSync(path.dirname(require.main.filename) + '/modules').filter(fn => fn.endsWith('.js')).map(m => m.slice(0, -3));
-	RPND.debug('Mods available', modsAvailable);
-	var modsEnabled = ['mqtt', 'idle'].concat(uciConfig.rpnd.modules_enabled || []);
-	modsEnabled = (modsEnabled || modsAvailable).filter(value => modsAvailable.includes(value));
+	var modsAvailable = fs.readdirSync(path.dirname(require.main.filename) + '/modules').filter(fn => fn.endsWith('.js')).map(m => m.slice(0, -3))
+	RPND.debug('Mods available', modsAvailable)
+	var modsEnabled = ['mqtt', 'idle'].concat(uciConfig.rpnd.modules_enabled || [])
+	modsEnabled = (modsEnabled || modsAvailable).filter(value => modsAvailable.includes(value))
 
-	var modsLoaded = [];
+	var modsLoaded = []
 
-	RPND.debug('Mods Enabled', modsEnabled);
+	RPND.debug('Mods Enabled', modsEnabled)
 	for (var modName of modsEnabled) {
-		RPND.info('Load ' + modName);
+		RPND.info('Load ' + modName)
 		modsLoaded.push({
 			name: modName,
 			mod: require('./modules/' + modName)
-		});
+		})
 	}
 
-	modsLoaded = modsLoaded.sort((a, b) => (b.mod.priority || 0) - (a.mod.priority || 0));
+	modsLoaded = modsLoaded.sort((a, b) => (b.mod.priority || 0) - (a.mod.priority || 0))
 
-	RPND.debugObj('Uci Config...', uciConfig);
+	RPND.debugObj('Uci Config...', uciConfig)
 
 	var config = {
 		rpnd: uciConfig.rpnd
-	};
-	config.rpnd.mods_enabled = modsEnabled.join(', ');
+	}
+	config.rpnd.mods_enabled = modsEnabled.join(', ')
 
 	for (var unit of modsLoaded) {
-		var modConfig = unit.mod.uciConfig && unit.mod.uciConfig(uciConfig);
+		var modConfig = unit.mod.uciConfig && unit.mod.uciConfig(uciConfig)
 		if (modConfig) {
-			config[unit.name] = modConfig;
-			RPND.info('Config ' + unit.name);
-			RPND.mods.push(unit.name);
-			RPND[unit.name] = unit.mod;
-			RPND.status[unit.name] = unit.mod.status || 'unavailable';
+			config[unit.name] = modConfig
+			RPND.info('Config ' + unit.name)
+			RPND.mods.push(unit.name)
+			RPND[unit.name] = unit.mod
+			RPND.status[unit.name] = unit.mod.status || 'unavailable'
 		}
 	}
-	RPND.status.rpnd.mods_loaded = RPND.mods.join(', ');
-	updateStatus();
+	RPND.status.rpnd.mods_loaded = RPND.mods.join(', ')
+	updateStatus()
 
 	try {
-		fs.writeFileSync(confpath, JSON.stringify(config, null, 1) + '\n');
+		fs.writeFileSync(confpath, JSON.stringify(config, null, 1) + '\n')
 	} catch (e) {
-		RPND.log('Config file error', e);
+		RPND.log('Config file error', e)
 	}
 
-	RPND.debugObj('Configured...', config);
+	RPND.debugObj('Configured...', config)
 
 	for (var modNme of RPND.mods) {
-		RPND.info('Run ' + modName);
-		RPND[modNme].run(RPND);
+		RPND.info('Run ' + modNme)
+		RPND[modNme].run(RPND)
 	}
 
-	RPND.info('Running!');
-	if (logmode.monitor) RPND.log('\x1b[2J');
+	RPND.info('Running!')
+	if (logmode.monitor) RPND.log('\x1b[2J')
 	setInterval(() => {
 		if (logmode.monitor) {
-			RPND.log('\x1b[?25l\x1b[1;1H');
+			RPND.log('\x1b[?25l\x1b[1;1H')
 			RPND.log(util.inspect(RPND.status, {
 				depth: 8,
 				colors: true
-			}).replace(/\n/g, '\x1b[0K\n'));
+			}).replace(/\n/g, '\x1b[0K\n'))
 		}
-		updateStatus();
-	}, 1000);
+		updateStatus()
+	}, 1000)
 
 	if (logmode.monitor) {
 		process.on('SIGINT', () => {
-			logger.log('\x1b[?25h\x1b[39m');
-			process.exit();
-		});
+			logger.log('\x1b[?25h\x1b[39m')
+			process.exit()
+		})
 	}
-	RPND.status.rpnd.mode = 'running';
+	RPND.status.rpnd.mode = 'running'
 
 	var exit = (reason) => {
-		RPND.status.rpnd.mode = reason;
-		updateStatus();
-		process.exit();
-	};
-	process.on('SIGTERM', () => exit('terminated'));
-	process.on('SIGINT', () => exit('interupted'));
-};
+		RPND.status.rpnd.mode = reason
+		updateStatus()
+		process.exit()
+	}
+	process.on('SIGTERM', () => exit('terminated'))
+	process.on('SIGINT', () => exit('interupted'))
+}
 
-if (require.main === module) RPND.start();
+if (require.main === module) RPND.start()

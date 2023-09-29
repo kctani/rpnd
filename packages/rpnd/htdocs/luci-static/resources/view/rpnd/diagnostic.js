@@ -1,64 +1,64 @@
-'use strict';
-'require form';
-'require fs';
+'use strict'
+'require form'
+'require fs'
 
-var pollInterval = 3;
+var pollInterval = 3
 
 var jsontohtml = (obj) => {
-  var html = '';
+  var html = ''
   for (var key in obj) {
-    var value = obj[key];
-    if (key == 'password' && typeof value == 'string') value = '************';
-    html += '<div class="sts_property"><div class="sts_key">' + key + '</div>' + ((typeof value) == 'object' ? jsontohtml(value) : '<div class="sts_value">' + value + '</div>') + '</div>';
+    var value = obj[key]
+    if (key == 'password' && typeof value == 'string') value = '************'
+    html += '<div class="sts_property"><div class="sts_key">' + key + '</div>' + ((typeof value) == 'object' ? jsontohtml(value) : '<div class="sts_value">' + value + '</div>') + '</div>'
   }
-  return '<div class="sts_object">' + html + '</div>';
+  return '<div class="sts_object">' + html + '</div>'
 }
 
 var mqttInMsg = (topic, data) => {
   if (topic != undefined && data != undefined)
-    fs.write('/tmp/rpnd/mqtt-in', topic + ':' + data);
-  else console.log('\x07Bell');
-};
+    fs.write('/tmp/rpnd/mqtt-in', topic + ':' + data)
+  else console.log('\x07Bell')
+}
 
 var CBIRpndStatus = form.DummyValue.extend({
-  renderWidget: function(section_id, option_id, cfgvalue) {
+  renderWidget: function (section_id, option_id, cfgvalue) {
     var table = E('div', {
       'class': 'sts_object'
-    });
+    })
 
-    L.Poll.add(L.bind(function() {
+    L.Poll.add(L.bind(function () {
       return L.resolveDefault(fs.read('/tmp/rpnd/status'), '{"status": "Not Found"}').then((statusJson) => {
-        var sts = JSON.parse(statusJson);
+        var sts = JSON.parse(statusJson)
 
-        table.innerHTML = jsontohtml(sts);
-      });
-    }, this), pollInterval);
+        table.innerHTML = jsontohtml(sts)
+      })
+    }, this), pollInterval)
 
-    return table;
+    return table
   }
-});
+})
 
 var CBIRpndConfig = form.DummyValue.extend({
-  renderWidget: function(section_id, option_id, cfgvalue) {
+  renderWidget: function (section_id, option_id, cfgvalue) {
     var table = E('div', {
       'class': 'sts_object'
-    });
+    })
 
-    table.innerHTML = jsontohtml(this.config);
+    table.innerHTML = jsontohtml(this.config)
 
-    return table;
+    return table
   }
-});
+})
 
 var CBIRpndDiagnostic = form.DummyValue.extend({
-  renderWidget: function(section_id, option_id, cfgvalue) {
+  renderWidget: function (section_id, option_id, cfgvalue) {
     var topicEl = E('input', {
       'class': 'cbi-input-text',
       'value': (this.config.sys && this.config.sys.root_topic) || ''
-    });
+    })
     var dataEl = E('input', {
       'class': 'cbi-input-text'
-    });
+    })
     /*
       div cbi-section-node
         div cbi-value
@@ -84,8 +84,8 @@ var CBIRpndDiagnostic = form.DummyValue.extend({
             'class': 'cbi-value-title'
           }, 'Topic'),
           E('div', {
-              'class': 'cbi-value-field'
-            },
+            'class': 'cbi-value-field'
+          },
             E('div', {}, topicEl)
           ),
         ]),
@@ -122,13 +122,13 @@ var CBIRpndDiagnostic = form.DummyValue.extend({
             }, 'Simulate mqtt message'),
           ])
         ]),
-      ]));
+      ]))
 
   }
-});
+})
 
 var CBIRpndIdent = form.DummyValue.extend({
-  renderWidget: function(section_id, option_id, cfgvalue) {
+  renderWidget: function (section_id, option_id, cfgvalue) {
     return (
       E('div', {
         'class': 'cbi-section-node'
@@ -148,7 +148,7 @@ var CBIRpndIdent = form.DummyValue.extend({
               'value': 'Start',
               'click': L.ui.createHandlerFn(this,
                 () => {
-                  mqttInMsg((this.config.sys && this.config.sys.root_topic + 'ident'), '');
+                  mqttInMsg((this.config.sys && this.config.sys.root_topic + 'ident'), '')
                 }
               )
             })),
@@ -157,14 +157,14 @@ var CBIRpndIdent = form.DummyValue.extend({
             }, 'Blink led repeatedly'),
           ])
         ])
-      ]));
+      ]))
 
   }
-});
+})
 
 return L.view.extend({
   load: () => {
-    return L.resolveDefault(fs.read('/tmp/rpnd/config'), '{"config": "Not Found"}');
+    return L.resolveDefault(fs.read('/tmp/rpnd/config'), '{"config": "Not Found"}')
   },
   render: (config_s) => {
 
@@ -172,39 +172,39 @@ return L.view.extend({
       document.head.appendChild(E('link', {
         'rel': 'stylesheet',
         'href': '/luci-static/resources/view/rpnd/rpnd.css'
-      }));
-    } catch (e) {}
+      }))
+    } catch (e) { }
 
-    var m, s, o;
-    var config = JSON.parse(config_s);
-    m = new form.Map('rpnd', _('Diagnostics'), _('IOT module manager'));
+    var m, s, o
+    var config = JSON.parse(config_s)
+    m = new form.Map('rpnd', _('Diagnostics'), _('IOT module manager'))
 
-    s = m.section(form.TypedSection, 'rpnd');
-    s.anonymous = true;
-    s.addremove = false;
+    s = m.section(form.TypedSection, 'rpnd')
+    s.anonymous = true
+    s.addremove = false
 
-    s.tab('status', _('Active Status'));
-    s.tab('config', _('Configuration'));
-    s.tab('control', _('Control'));
+    s.tab('status', _('Active Status'))
+    s.tab('config', _('Configuration'))
+    s.tab('control', _('Control'))
 
-    o = s.taboption('status', CBIRpndStatus, '__status__');
-    o.optional = false;
+    o = s.taboption('status', CBIRpndStatus, '__status__')
+    o.optional = false
 
-    o = s.taboption('config', CBIRpndConfig, '__config__');
-    o.optional = false;
-    o.config = config;
+    o = s.taboption('config', CBIRpndConfig, '__config__')
+    o.optional = false
+    o.config = config
 
-    o = s.taboption('control', CBIRpndDiagnostic, '__diagnostic__');
-    o.optional = false;
-    o.config = config;
+    o = s.taboption('control', CBIRpndDiagnostic, '__diagnostic__')
+    o.optional = false
+    o.config = config
 
-    o = s.taboption('control', CBIRpndIdent, '__ident__');
-    o.optional = false;
-    o.config = config;
+    o = s.taboption('control', CBIRpndIdent, '__ident__')
+    o.optional = false
+    o.config = config
 
-    return m.render();
+    return m.render()
   },
   handleSaveApply: null,
   handleSave: null,
   handleReset: null,
-});
+})
