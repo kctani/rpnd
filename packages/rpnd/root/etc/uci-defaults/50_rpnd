@@ -7,7 +7,9 @@ if ! grep -q Rpnd-initialized "/boot/config.txt"; then
 	commit
 	exit
 EOF
+	printf "ttyGS0::respawn:/usr/sbin/agetty -h -t 60 ttyGS0 115200 vt102\n" >> /etc/inittab
 	printf "dtoverlay=gpio-no-irq\n" >> /boot/config.txt
+	printf "dtoverlay=dwc2,dr_mode=otg\n" >> /boot/config.txt
 	printf "#Rpnd-initialized\n" >> /boot/config.txt
 fi
 exit 0

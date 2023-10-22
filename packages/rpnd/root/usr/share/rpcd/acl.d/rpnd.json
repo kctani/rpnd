@@ -10,7 +10,8 @@
 			"file": {
 				"/tmp/rpnd/status": ["read"],
 				"/tmp/rpnd/config": ["read"],
-				"/tmp/rpnd/mqtt-in": ["write"]
+				"/tmp/rpnd/mqtt-in": ["write"],
+				"/opt/rpnd/app/chimes/*": ["write"]
 			}
 		}
 	}

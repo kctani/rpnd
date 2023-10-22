@@ -21,7 +21,7 @@ return L.view.extend({
     s.anonymous = true
     s.addremove = false
 
-    o = s.option(form.Value, 'ctrl_topic', _('root Topic'), _('Root topic for chime'))
+    o = s.option(form.Value, 'root_topic', _('root Topic'), _('Root topic for chime'))
     o.optional = false
     o.datatype = 'string'
     o.default = 'chime'
@@ -30,6 +30,8 @@ return L.view.extend({
     o.optional = true
     o.datatype = 'string'
 
+    o = s.option(form.FileUpload, '', _('Upload chime'), _('Upload wav file'))
+    o.root_directory = '/opt/rpnd/app/chimes/'
     return m.render()
   }
 })
