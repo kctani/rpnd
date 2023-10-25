@@ -1,0 +1,7 @@
+#!/bin/sh
+printf "ttyGS0::respawn:/usr/sbin/agetty -h -t 60 ttyGS0 115200 vt102\n" >> /etc/inittab
+if ! grep -q Rpnd-otg-serial-initialized "/boot/config.txt"; then
+	printf "dtoverlay=dwc2,dr_mode=otg\n" >> /boot/config.txt
+	printf "#Rpnd-otg-serial-initialized\n" >> /boot/config.txt
+fi
+exit 0

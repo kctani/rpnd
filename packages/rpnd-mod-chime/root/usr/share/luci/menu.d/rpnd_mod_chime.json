@@ -1,0 +1,88 @@
+{
+  "admin/rpnd/": {
+    "title": "rpnd",
+    "order": 60,
+    "action": {
+      "type": "firstchild"
+    }
+  },
+  "admin/rpnd/config": {
+    "title": "System",
+    "order": 1,
+    "action": {
+      "type": "view",
+      "path": "rpnd/rpnd"
+    }
+  },
+  "admin/rpnd/mqtt": {
+    "title": "Mqtt",
+    "order": 2,
+    "action": {
+      "type": "view",
+      "path": "rpnd/mqtt"
+    }
+  },
+  "admin/rpnd/gpio": {
+    "title": "Gpio",
+    "order": 3,
+    "action": {
+      "type": "view",
+      "path": "rpnd/gpio"
+    },
+    "depends": { 
+      "uci": { "rpnd": {"@rpnd": { "modules_enabled": "rpio" } } } 
+    }
+  },
+  "admin/rpnd/rt433": {
+    "title": "RTL 433",
+    "order": 4,
+    "action": {
+      "type": "view",
+      "path": "rpnd/rt433"
+    },
+    "depends": { 
+      "uci": { "rpnd": {"@rpnd": { "modules_enabled": "rt433" } } } 
+    }
+  },
+  "admin/rpnd/i2c": {
+    "title": "I2c Bus",
+    "order": 5,
+    "action": {
+      "type": "view",
+      "path": "rpnd/i2c"
+    },
+    "depends": { 
+      "uci": { "rpnd": {"@rpnd": { "modules_enabled": "i2c" } } } 
+    }
+  },
+  "admin/rpnd/wire": {
+    "title": "One Wire",
+    "order": 6,
+    "action": {
+      "type": "view",
+      "path": "rpnd/wire"
+    },
+    "depends": { 
+      "uci": { "rpnd": {"@rpnd": { "modules_enabled": "wire" } } } 
+    }
+  },
+  "admin/rpnd/chime": {
+    "title": "Chime",
+    "order": 7,
+    "action": {
+      "type": "view",
+      "path": "rpnd/chime"
+    },
+    "depends": { 
+      "uci": { "rpnd": {"@rpnd": { "modules_enabled": "chime" } } } 
+    }
+  },
+  "admin/rpnd/diagnostic": {
+    "title": "Diagnostics",
+    "order": 8,
+    "action": {
+      "type": "view",
+      "path": "rpnd/diagnostic"
+    }
+  }
+}
