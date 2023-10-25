@@ -17,7 +17,7 @@ define Package/rpnd-mod-wire
 	SECTION:=utils
 	CATEGORY:=IOT
 	TITLE:=RPND mod Wire
-	DEPENDS:=+rpnd  
+	DEPENDS:=+rpnd-base  
 endef
 
 # Package description; a more verbose description on what our package does
@@ -57,4 +57,4 @@ endef
 define Package/rpnd-mod-wire/postinst
 endef
 
-$(eval $(call BuildPackage,rpnd))
+$(eval $(call BuildPackage,rpnd-mod-wire))

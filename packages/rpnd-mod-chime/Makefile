@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 # Name, version and release number
 # The name and version of your package are used to define the variable to point to the build directory of your package: $(PKG_BUILD_DIR)
-PKG_NAME:=rpnd_mod_chime
+PKG_NAME:=rpnd-mod-chime
 PKG_VERSION:=1.0
 PKG_RELEASE:=1
 
@@ -13,15 +13,15 @@ SOURCE_DIR:=./src/
 include $(INCLUDE_DIR)/package.mk
 
 # Package definition; instructs on how and where our package will appear in the overall configuration menu ('make menuconfig')
-define Package/rpnd_mod_chime
+define Package/rpnd-mod-chime
 	SECTION:=utils
 	CATEGORY:=IOT
 	TITLE:=RPND mod Chime
-	DEPENDS:=+rpnd  
+	DEPENDS:=+rpnd-base  
 endef
 
 # Package description; a more verbose description on what our package does
-define Package/rpnd_mod_chime/description
+define Package/rpnd-mod-chime/description
 	NodeJs Mqtt driven Iot application
 endef
 
@@ -40,7 +40,7 @@ endef
 # Package install instructions;
 # create a directory inside the package to hold our executable,
 # and then copy the executable we built previously into the folder
-define Package/rpnd_mod_chime/install
+define Package/rpnd-mod-chime/install
 	$(INSTALL_DIR) $(1)/opt/rpnd/app/
 	$(INSTALL_DIR) $(1)/opt/rpnd/app/modules/
 	$(CP) ./src/app/* $(1)/opt/rpnd/app/
@@ -54,7 +54,7 @@ define Package/rpnd_mod_chime/install
 	$(CP) ./root/* $(1)/
 endef
 
-define Package/rpnd_mod_chime/postinst
+define Package/rpnd-mod-chime/postinst
 endef
 
-$(eval $(call BuildPackage,rpnd))
+$(eval $(call BuildPackage,rpnd-mod-chime))

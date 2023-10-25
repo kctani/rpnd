@@ -60,4 +60,4 @@ date +%Y-%m-%d\ %T > /etc/config/build-date
 exit 0
 endef
 
-$(eval $(call BuildPackage,rpnd))
+$(eval $(call BuildPackage,rpnd-base))

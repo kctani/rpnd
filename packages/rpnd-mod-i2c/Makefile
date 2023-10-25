@@ -17,7 +17,7 @@ define Package/rpnd-mod-i2c
 	SECTION:=utils
 	CATEGORY:=IOT
 	TITLE:=RPND mod i2c
-	DEPENDS:=+rpnd  
+	DEPENDS:=+rpnd-base  
 endef
 
 # Package description; a more verbose description on what our package does
@@ -57,4 +57,4 @@ endef
 define Package/rpnd-mod-i2c/postinst
 endef
 
-$(eval $(call BuildPackage,rpnd))
+$(eval $(call BuildPackage,rpnd-mod-i2c))
