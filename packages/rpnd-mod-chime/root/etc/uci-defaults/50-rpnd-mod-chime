@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ "$(uci -q get rpnd.@chime[0])" = '' ] ; then
+	uci add rpnd chime
+	uci commit
+fi
+
+exit 0

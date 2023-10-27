@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ "$(grep 'ttyGS0::'  /etc/inittab)" = '' ] ; then
+	printf "ttyGS0::respawn:/usr/sbin/agetty -h -t 60 ttyGS0 115200 vt102\n" >> /etc/inittab
+fi
+exit 0

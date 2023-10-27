@@ -1,8 +1,0 @@
-#!/bin/sh
-
-uci -q batch << EOF
-add rpnd rt433
-commit
-exit
-EOF
-exit 0

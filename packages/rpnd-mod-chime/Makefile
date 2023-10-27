@@ -44,9 +44,7 @@ define Package/rpnd-mod-chime/install
 	$(INSTALL_DIR) $(1)/opt/rpnd/app/
 	$(INSTALL_DIR) $(1)/opt/rpnd/app/modules/
 	$(CP) ./src/app/* $(1)/opt/rpnd/app/
-	$(INSTALL_BIN) ./src/service/start.sh $(1)/opt/rpnd/
 	$(INSTALL_DIR) $(1)/etc/init.d/
-	$(INSTALL_BIN) ./src/service/rpnd $(1)/etc/init.d/
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/
 	$(INSTALL_DIR) $(1)/www/luci-static/resources/view/rpnd/
 	$(CP) ./htdocs/*  $(1)/www/

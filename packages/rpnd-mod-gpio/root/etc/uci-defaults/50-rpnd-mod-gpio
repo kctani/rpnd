@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ "$(uci -q get rpnd.@gpio[0])" = '' ] ; then
+	uci add rpnd gpio
+	uci commit
+fi
+
+exit 0

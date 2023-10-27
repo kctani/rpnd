@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ "$(uci -q get rpnd.@i2c[0])" = '' ] ; then
+	uci add rpnd i2c
+	uci commit
+fi
+
+exit 0

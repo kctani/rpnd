@@ -7,7 +7,7 @@
       "path": "rpnd/gpio"
     },
     "depends": { 
-      "uci": { "rpnd": {"@rpnd": { "modules_enabled": "rpio" } } } 
+      "uci": { "rpnd": {"@rpnd": true } } 
     }
   }
 }

@@ -17,7 +17,7 @@ define Package/rpnd-base
 	SECTION:=utils
 	CATEGORY:=IOT
 	TITLE:=RPND Rp NodeJs Controller
-	DEPENDS:=+node +node-mqtt 
+	DEPENDS:=+node +node-mqtt +luci
 endef
 
 # Package description; a more verbose description on what our package does
@@ -55,9 +55,6 @@ define Package/rpnd-base/install
 endef
 
 define Package/rpnd-base/postinst
-#!/bin/sh
-date +%Y-%m-%d\ %T > /etc/config/build-date
-exit 0
 endef
 
 $(eval $(call BuildPackage,rpnd-base))

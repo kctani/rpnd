@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ "$(uci -q get rpnd.@rt433[0])" = '' ] ; then
+	uci add rpnd rt433
+	uci commit
+fi
+
+exit 0

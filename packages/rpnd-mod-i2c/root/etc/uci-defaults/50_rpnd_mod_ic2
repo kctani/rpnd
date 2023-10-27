@@ -1,8 +1,0 @@
-#!/bin/sh
-
-uci -q batch << EOF
-add rpnd i2c
-commit
-exit
-EOF
-exit 0

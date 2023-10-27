@@ -1,8 +1,0 @@
-#!/bin/sh
-
-uci -q batch << EOF
-add rpnd wire
-commit
-exit
-EOF
-exit 0

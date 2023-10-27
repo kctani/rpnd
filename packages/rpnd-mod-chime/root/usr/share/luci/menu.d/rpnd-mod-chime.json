@@ -5,9 +5,6 @@
     "action": {
       "type": "view",
       "path": "rpnd/chime"
-    },
-    "depends": { 
-      "uci": { "rpnd": {"@rpnd": { "modules_enabled": "chime" } } } 
     }
   }
 }
