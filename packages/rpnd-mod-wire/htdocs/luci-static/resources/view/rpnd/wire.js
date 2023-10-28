@@ -16,7 +16,7 @@ return L.view.extend({
 
     m = new form.Map('rpnd', _('Configuration'), _('IOT One Wire manager'))
 
-    s = m.section(form.TypedSection, 'rt433', _('RTL 433'))
+    s = m.section(form.TypedSection, 'wire', _('One Wire'))
     s.anonymous = true
     s.addremove = false
 
@@ -24,11 +24,6 @@ return L.view.extend({
     s.tab('devices', _('Devices'))
 
     o = s.taboption('general', form.Value, "device_path", "Device", "Blank for default device")
-    o.optional = true
-    o.placeholder = '/dev/xxx'
-    o.datatype = 'string'
-
-    o = s.taboption('devices', form.Value, "device_path", "Device", "Blank for default device")
     o.optional = true
     o.placeholder = '/dev/xxx'
     o.datatype = 'string'

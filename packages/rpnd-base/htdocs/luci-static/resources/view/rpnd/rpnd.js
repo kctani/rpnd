@@ -28,15 +28,7 @@ return L.view.extend({
     o = s.option(form.Value, 'node_alias', _('Hostname'), _('Used to identify device'))
     o.optional = false
     o.rmempty = false
-
-
-    o = s.option(form.MultiValue, 'modules_enabled', _('Module'), _('Selects modules to load'))
-    o.value('rpio', 'Gpio General purpose io')
-    o.value('rt433', 'RT 433 receiver')
-    o.value('i2c', 'I2C Bus')
-    o.value('wire', 'OneWire serial bus')
-    o.value('chime', 'Play Chime')
-    o.optional = true
+    o.default = "RPND" 
 
     return m.render()
   }

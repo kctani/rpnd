@@ -2,6 +2,8 @@
 
 if [ "$(uci -q get rpnd.@gpio[0])" = '' ] ; then
 	uci add rpnd gpio
+	uci set rpnd.@gpio[0].disabled=0
+	uci set rpnd.@gpio[0].rpio=0
 	uci commit
 fi
 

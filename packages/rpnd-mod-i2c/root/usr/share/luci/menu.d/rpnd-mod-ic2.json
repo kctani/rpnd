@@ -5,9 +5,6 @@
     "action": {
       "type": "view",
       "path": "rpnd/i2c"
-    },
-    "depends": { 
-      "uci": { "rpnd": {"@rpnd": { "modules_enabled": "i2c" } } } 
     }
   }
 }

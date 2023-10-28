@@ -5,9 +5,6 @@
     "action": {
       "type": "view",
       "path": "rpnd/rt433"
-    },
-    "depends": { 
-      "uci": { "rpnd": {"@rpnd": { "modules_enabled": "rt433" } } } 
     }
   }
 }

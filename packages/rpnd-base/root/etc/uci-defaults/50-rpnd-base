@@ -2,15 +2,45 @@
 
 touch /etc/config/rpnd
 
+ID=$(cat /sys/class/net/*/address | grep -v 00:00 | head -1 | cut -d ':' -f 1,2,5,6)
+ID=${ID//[:]}
+
 if [ "$(uci -q get rpnd.@rpnd[0])" = '' ] ; then
  	uci add rpnd rpnd
-	uci set wireless.radio0.disabled=0
-	uci set wireless.default_radio0.ssid=Rpnd-Setup
-	uci set network.lan.ipaddr=192.168.77.1
+	uci set rpnd.@rpnd[0].node_alias="RPND_${ID}"
+	uci set rpnd.@rpnd[0].disabled=0
 	uci commit
 fi
+
+if [ "$(uci -q get rpnd.@mqtt[0])" = '' ] ; then
+ 	uci add rpnd mqtt
+	uci set rpnd.@mqtt[0].client_id="RPND_${ID}"
+	uci set rpnd.@mqtt[0].disabled=0
+	uci commit
+fi
+
+if [ "$(uci -q get rpnd.@idle[0])" = '' ] ; then
+ 	uci add rpnd idle
+	uci set rpnd.@idle[0].disabled=0
+	uci commit
+fi
+
+if [ "$(uci -q get dhcp.@dnsmasq[0])" != '' ] ; then
+	uci set dhcp.@dnsmasq[0].rebind_protection=0
+fi
+
+if [ "$(uci -q get wireless.radio0)" != '' ] ; then
+uci set wireless.radio0.disabled=0
+uci set wireless.default_radio0.ssid=Rpnd-Setup
+fi
+
+if [ "$(uci -q get network.lan)" != '' ] ; then
+	uci set network.lan.ipaddr=192.168.77.1
+fi
+
 if [ "$(grep -q Rpnd-initialized "/boot/config.txt")" = '' ] ; then
 	printf "dtoverlay=gpio-no-irq\n" >> /boot/config.txt
 	printf "#Rpnd-initialized\n" >> /boot/config.txt
 fi
+
 exit 0

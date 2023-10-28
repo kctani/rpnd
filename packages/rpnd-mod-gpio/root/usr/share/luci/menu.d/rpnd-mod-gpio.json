@@ -5,9 +5,6 @@
     "action": {
       "type": "view",
       "path": "rpnd/gpio"
-    },
-    "depends": { 
-      "uci": { "rpnd": {"@rpnd": true } } 
     }
   }
 }
