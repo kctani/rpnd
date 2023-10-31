@@ -2,7 +2,6 @@
 
 if [ "$(uci -q get rpnd.@chime[0])" = '' ] ; then
 	uci add rpnd chime
-	uci set rpnd.@chime[0].disabled=0
 	uci commit
 fi
 

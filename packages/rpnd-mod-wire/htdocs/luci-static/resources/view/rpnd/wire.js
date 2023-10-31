@@ -20,6 +20,8 @@ return L.view.extend({
     s.anonymous = true
     s.addremove = false
 
+    o = s.option(form.Flag, 'disabled', _('Disabled'), _('Disable Module'))
+
     s.tab('general', _('General Settings'))
     s.tab('devices', _('Devices'))
 

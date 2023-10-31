@@ -17,7 +17,7 @@ define Package/rpnd-mod-chime
 	SECTION:=utils
 	CATEGORY:=IOT
 	TITLE:=RPND mod Chime
-	DEPENDS:=+rpnd-base  
+	DEPENDS:=+rpnd-base  +usbutils +alsa-utils +kmod-usb-audio
 endef
 
 # Package description; a more verbose description on what our package does
@@ -42,8 +42,10 @@ endef
 # and then copy the executable we built previously into the folder
 define Package/rpnd-mod-chime/install
 	$(INSTALL_DIR) $(1)/opt/rpnd/app/
+	$(INSTALL_DIR) $(1)/opt/rpnd/chimes/
 	$(INSTALL_DIR) $(1)/opt/rpnd/app/modules/
 	$(CP) ./src/app/* $(1)/opt/rpnd/app/
+	$(CP) ./src/chimes/* $(1)/opt/rpnd/chimes/
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/
 	$(INSTALL_DIR) $(1)/www/luci-static/resources/view/rpnd/

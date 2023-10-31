@@ -2,7 +2,6 @@
 
 if [ "$(uci -q get rpnd.@wire[0])" = '' ] ; then
 	uci add rpnd wire
-	uci set rpnd.@wire[0].disabled=0
 	uci commit
 fi
 

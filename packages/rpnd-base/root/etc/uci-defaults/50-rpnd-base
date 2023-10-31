@@ -30,8 +30,8 @@ if [ "$(uci -q get dhcp.@dnsmasq[0])" != '' ] ; then
 fi
 
 if [ "$(uci -q get wireless.radio0)" != '' ] ; then
-uci set wireless.radio0.disabled=0
-uci set wireless.default_radio0.ssid=Rpnd-Setup
+	uci set wireless.radio0.disabled=0
+	uci set wireless.default_radio0.ssid=Rpnd-Setup
 fi
 
 if [ "$(uci -q get network.lan)" != '' ] ; then

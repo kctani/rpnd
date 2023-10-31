@@ -27,7 +27,7 @@ Mchime.uciConfig = (uciConf) => {
       aplay: {
         options: uciConf.chime.aplay_options || ''
       },
-      chimesFolder: __dirname + '/../chimes/'
+      chimesFolder: __dirname + '/../../chimes/'
     }
     return config
   }

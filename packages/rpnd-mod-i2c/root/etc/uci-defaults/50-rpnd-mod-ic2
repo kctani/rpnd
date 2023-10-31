@@ -2,7 +2,6 @@
 
 if [ "$(uci -q get rpnd.@i2c[0])" = '' ] ; then
 	uci add rpnd i2c
-	uci set rpnd.@i2c[0].disabled=0
 	uci commit
 fi
 

@@ -21,6 +21,8 @@ return L.view.extend({
     s.anonymous = true
     s.addremove = false
 
+    o = s.option(form.Flag, 'disabled', _('Disabled'), _('Disable Module'))
+
     o = s.option(form.Value, 'root_topic', _('root Topic'), _('Root topic for chime'))
     o.optional = false
     o.datatype = 'string'

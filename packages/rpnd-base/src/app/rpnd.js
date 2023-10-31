@@ -82,14 +82,21 @@ RPND.start = () => {
 
 	const uciConfig = require('./config-uci').loadConfig()
 
+	RPND.debugObj('Uci Config...', uciConfig)
+
 	var modsAvailable = fs.readdirSync(path.dirname(require.main.filename) + '/modules').filter(fn => fn.endsWith('.js')).map(m => m.slice(0, -3))
 	RPND.debug('Mods available', modsAvailable)
-	var modsEnabled = ['mqtt', 'idle'].concat(uciConfig.rpnd.modules_enabled || [])
-	modsEnabled = (modsEnabled || modsAvailable).filter(value => modsAvailable.includes(value))
+	var modsEnabled = [] //['mqtt', 'idle'].concat(uciConfig.rpnd.modules_enabled || [])
+
+	for (let mod in uciConfig) {
+		if (uciConfig[mod].disabled != 1 && modsAvailable.includes(mod)) {
+			modsEnabled.push(mod)
+		}  
+	}
+	RPND.debug('Mods Enabled', modsEnabled)
 
 	var modsLoaded = []
 
-	RPND.debug('Mods Enabled', modsEnabled)
 	for (var modName of modsEnabled) {
 		RPND.info('Load ' + modName)
 		modsLoaded.push({
@@ -99,8 +106,7 @@ RPND.start = () => {
 	}
 
 	modsLoaded = modsLoaded.sort((a, b) => (b.mod.priority || 0) - (a.mod.priority || 0))
-
-	RPND.debugObj('Uci Config...', uciConfig)
+	RPND.debug('Mods Loaded', modsLoaded)
 
 	var config = {
 		rpnd: uciConfig.rpnd

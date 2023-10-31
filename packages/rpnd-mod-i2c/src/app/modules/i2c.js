@@ -11,6 +11,7 @@ try {
 	oled = require('oled-i2c-bus')
 } catch (e) {
 	rpnd.log(`M-i2c - disabled - i2c-bus not available ${e.message}`)
+	module.exports = {}
 	return
 }
 

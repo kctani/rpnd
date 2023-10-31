@@ -77,7 +77,7 @@ Mrt433.status = {
 }
 
 Mrt433.uciConfig = (uciConf) => {
-	if (uciConf.rt433 && !uciConf.rt433.disabled && uciConf.rt433.protocols_enabled) {
+	if (uciConf.rt433 && uciConf.rt433.protocols_enabled) {
 		config = {
 			device_path: uciConf.rt433.device_path || ''
 		}

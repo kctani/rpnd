@@ -22,7 +22,7 @@ function connected() {
 }
 
 Mmqtt.uciConfig = (uciConf) => {
-	if (uciConf.mqtt && !uciConf.mqtt.disabled) {
+	if (uciConf.mqtt) {
 		config = {
 			url: uciConf.mqtt.url,
 			opts: {
