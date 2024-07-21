@@ -166,7 +166,7 @@ RPND.start = () => {
 		process.exit()
 	}
 	process.on('SIGTERM', () => exit('terminated'))
-	process.on('SIGINT', () => exit('interupted'))
+	process.on('SIGINT', () => exit('interrupted'))
 }
 
 if (require.main === module) RPND.start()

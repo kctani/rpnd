@@ -15,7 +15,7 @@ return L.view.extend({
     } catch (e) { }
 
     var m, s, o
-    m = new form.Map('rpnd', _('Configuration'), _('IOT comunications'))
+    m = new form.Map('rpnd', _('Configuration'), _('IOT communications'))
 
     s = m.section(form.TypedSection, 'mqtt', _('Mqtt'))
     s.anonymous = true
@@ -40,6 +40,7 @@ return L.view.extend({
     o = s.option(form.Value, 'status_topic', _('Status Topic'), _('Module status changes are published to this topic'))
     o.optional = true
     o.datatype = 'string'
+    o.placeholder = 'status'
 
     return m.render()
   }

@@ -4,12 +4,12 @@
 
 var pollInterval = 3
 
-var jsontohtml = (obj) => {
+var jsonToHtml = (obj) => {
   var html = ''
   for (var key in obj) {
     var value = obj[key]
     if (key == 'password' && typeof value == 'string') value = '************'
-    html += '<div class="sts_property"><div class="sts_key">' + key + '</div>' + ((typeof value) == 'object' ? jsontohtml(value) : '<div class="sts_value">' + value + '</div>') + '</div>'
+    html += '<div class="sts_property"><div class="sts_key">' + key + '</div>' + ((typeof value) == 'object' ? jsonToHtml(value) : '<div class="sts_value">' + value + '</div>') + '</div>'
   }
   return '<div class="sts_object">' + html + '</div>'
 }
@@ -30,7 +30,7 @@ var CBIRpndStatus = form.DummyValue.extend({
       return L.resolveDefault(fs.read('/tmp/rpnd/status'), '{"status": "Not Found"}').then((statusJson) => {
         var sts = JSON.parse(statusJson)
 
-        table.innerHTML = jsontohtml(sts)
+        table.innerHTML = jsonToHtml(sts)
       })
     }, this), pollInterval)
 
@@ -44,7 +44,7 @@ var CBIRpndConfig = form.DummyValue.extend({
       'class': 'sts_object'
     })
 
-    table.innerHTML = jsontohtml(this.config)
+    table.innerHTML = jsonToHtml(this.config)
 
     return table
   }

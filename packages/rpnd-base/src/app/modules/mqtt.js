@@ -14,7 +14,7 @@ var subscriptions = []
 var status = {
 	'link': 'down',
 	'sent': 0,
-	'recieved': 0
+	'received': 0
 }
 
 function connected() {
@@ -30,13 +30,12 @@ Mmqtt.uciConfig = (uciConf) => {
 				password: uciConf.mqtt.password,
 				client_id: uciConf.mqtt.client_id || 'rpnd_' + uciConf.rpnd.node_id
 			},
-			status_topic: uciConf.rpnd.root_topic + uciConf.mqtt.status_topic,
 			status_up: 'UP',
 			status_down: 'DOWN'
 		}
-		if (config.status_topic) {
+		if (uciConf.mqtt.status_topic) {
 			config.opts.will = {
-				topic: config.status_topic,
+				topic: uciConf.rpnd.root_topic + uciConf.mqtt.status_topic,
 				payload: config.status_down,
 				retain: true
 			}
@@ -50,7 +49,7 @@ Mmqtt.run = () => {
 	client = mqtt.connect(config.url, config.opts)
 
 	var procMsg = (topic, payload) => {
-		status.recieved++
+		status.received++
 		subscriptions.forEach((sub) => {
 			if (topic === sub.topic) {
 				sub.listener(topic, payload)
@@ -62,10 +61,12 @@ Mmqtt.run = () => {
 
 	client.on('connect', (connack) => {
 		status.link = 'connected'
-		rpnd.info('Mqttt.connected ')
-		Mmqtt.publish(config.status_topic, config.status_up, {
-			retain: true
-		})
+		rpnd.info('Mqtt.connected ')
+		if (config.opts.will) {
+			Mmqtt.publish(config.opts.will.topic, config.status_up, {
+				retain: true
+			})
+		}
 		subscriptions.forEach((sub) => {
 			client.subscribe(sub.topic)
 		})
@@ -73,7 +74,7 @@ Mmqtt.run = () => {
 
 	client.on('close', () => {
 		status.link = 'closed'
-		rpnd.info('Mqttt.closed ')
+		rpnd.info('Mqtt.closed ')
 		if (client.disconnected) {
 			client.reconnect()
 		}
