@@ -9,11 +9,11 @@ const logger = new console.Console({
 })
 
 const tmpPath = '/tmp/rpnd'
-const statuspath = tmpPath + '/status'
-const confpath = tmpPath + '/config'
+const statusPath = tmpPath + '/status'
+const confPath = tmpPath + '/config'
 
 const args = process.argv.slice(2)
-const logmode = {
+const logMode = {
 	quiet: args.includes('-q'),
 	error: !args.includes('-q'),
 	warn: (args.includes('-w') || args.includes('-i') || args.includes('-d')) && !args.includes('-q'),
@@ -27,27 +27,27 @@ var RPND = {}
 RPND.tmpPath = tmpPath
 
 RPND.log = (...a) => {
-	if (!logmode.quiet) logger.log(...a)
+	if (!logMode.quiet) logger.log(...a)
 }
 
 RPND.info = (...a) => {
-	if (logmode.info) logger.log(...a)
+	if (logMode.info) logger.log(...a)
 }
 
 RPND.warn = (...a) => {
-	if (logmode.warn) logger.warn(...a)
+	if (logMode.warn) logger.warn(...a)
 }
 
 RPND.error = (...a) => {
-	if (logmode.warn) logger.error(...a)
+	if (logMode.warn) logger.error(...a)
 }
 
 RPND.debug = (...a) => {
-	if (logmode.debug) logger.debug(...a)
+	if (logMode.debug) logger.debug(...a)
 }
 
 RPND.debugObj = (caption, obj) => {
-	if (logmode.debug) {
+	if (logMode.debug) {
 		logger.log(caption)
 		logger.dir(obj, {
 			depth: 8
@@ -63,7 +63,7 @@ RPND.status = {
 
 var updateStatus = () => {
 	try {
-		fs.writeFileSync(statuspath, JSON.stringify(RPND.status) + '\n')
+		fs.writeFileSync(statusPath, JSON.stringify(RPND.status) + '\n')
 	} catch (e) {
 		RPND.log('Status file error', e)
 	}
@@ -127,7 +127,7 @@ RPND.start = () => {
 	updateStatus()
 
 	try {
-		fs.writeFileSync(confpath, JSON.stringify(config, null, 1) + '\n')
+		fs.writeFileSync(confPath, JSON.stringify(config, null, 1) + '\n')
 	} catch (e) {
 		RPND.log('Config file error', e)
 	}
@@ -140,9 +140,9 @@ RPND.start = () => {
 	}
 
 	RPND.info('Running!')
-	if (logmode.monitor) RPND.log('\x1b[2J')
+	if (logMode.monitor) RPND.log('\x1b[2J')
 	setInterval(() => {
-		if (logmode.monitor) {
+		if (logMode.monitor) {
 			RPND.log('\x1b[?25l\x1b[1;1H')
 			RPND.log(util.inspect(RPND.status, {
 				depth: 8,
@@ -152,7 +152,7 @@ RPND.start = () => {
 		updateStatus()
 	}, 1000)
 
-	if (logmode.monitor) {
+	if (logMode.monitor) {
 		process.on('SIGINT', () => {
 			logger.log('\x1b[?25h\x1b[39m')
 			process.exit()

@@ -94,7 +94,7 @@ Mmqtt.run = () => {
 		}).split(':')
 		rpnd.debug('mqtt-in-file', msg)
 		if (msg.length === 2) procMsg(msg[0], msg[1])
-		else rpnd.warn('Invalid messag in ' + mqttInFilePath)
+		else rpnd.warn('Invalid message in ' + mqttInFilePath)
 	})
 }
 

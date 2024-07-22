@@ -43,9 +43,7 @@ var CBIRpndConfig = form.DummyValue.extend({
     var table = E('div', {
       'class': 'sts_object'
     })
-
-    table.innerHTML = jsonToHtml(this.config)
-
+    table.innerHTML = jsonToHtml(cfgvalue.config)
     return table
   }
 })
@@ -54,7 +52,7 @@ var CBIRpndDiagnostic = form.DummyValue.extend({
   renderWidget: function (section_id, option_id, cfgvalue) {
     var topicEl = E('input', {
       'class': 'cbi-input-text',
-      'value': (this.config.sys && this.config.sys.root_topic) || ''
+      'value': (cfgvalue.config.rpnd && cfgvalue.config.rpnd.root_topic) || ''
     })
     var dataEl = E('input', {
       'class': 'cbi-input-text'
@@ -148,7 +146,7 @@ var CBIRpndIdent = form.DummyValue.extend({
               'value': 'Start',
               'click': L.ui.createHandlerFn(this,
                 () => {
-                  mqttInMsg((this.config.sys && this.config.sys.root_topic + 'ident'), '')
+                  mqttInMsg((cfgvalue.config.idle && cfgvalue.config.idle.ident_topic), '')
                 }
               )
             })),
@@ -162,11 +160,45 @@ var CBIRpndIdent = form.DummyValue.extend({
   }
 })
 
+var CBIRpndChime = form.DummyValue.extend({
+  renderWidget: function (section_id, option_id, cfgvalue) {
+    var table = E('div', {
+      'class': 'sts_object'
+    })
+    for (let chime of cfgvalue.chimes) {
+      table.appendChild(
+        E('div', {
+          'class': 'cbi-table-row'
+        }, [
+          E('div', {
+            'class': 'cbi-table-data'
+          }, chime.name),
+          E('input', {
+            'type': 'button',
+            'class': 'cbi-button cbi-button-apply',
+            'value': 'Start',
+            'click': L.ui.createHandlerFn(this,
+              () => {
+                mqttInMsg((cfgvalue.config.chime && cfgvalue.config.chime.ctrlTopic), chime.name)
+              }
+            )
+          })]
+        )
+      )
+    }
+    return table
+
+  }
+})
+
 return L.view.extend({
   load: () => {
-    return L.resolveDefault(fs.read('/tmp/rpnd/config'), '{"config": "Not Found"}')
+    return Promise.all([
+      L.resolveDefault(fs.read('/tmp/rpnd/config'), '{"config": "Not Found"}'),
+      L.resolveDefault(fs.list('/opt/rpnd/chimes'), [])
+    ])
   },
-  render: (config_s) => {
+  render: (args) => {
 
     try {
       document.head.appendChild(E('link', {
@@ -176,7 +208,8 @@ return L.view.extend({
     } catch (e) { }
 
     var m, s, o
-    var config = JSON.parse(config_s)
+    var cfgvalue = () => { return { config: JSON.parse(args[0]), chimes: args[1] } }
+
     m = new form.Map('rpnd', _('Diagnostics'), _('IOT module manager'))
 
     s = m.section(form.TypedSection, 'rpnd')
@@ -186,21 +219,26 @@ return L.view.extend({
     s.tab('status', _('Active Status'))
     s.tab('config', _('Configuration'))
     s.tab('control', _('Control'))
+    s.tab('chime', _('Chime'))
 
     o = s.taboption('status', CBIRpndStatus, '__status__')
     o.optional = false
 
     o = s.taboption('config', CBIRpndConfig, '__config__')
+    o.cfgvalue = cfgvalue
     o.optional = false
-    o.config = config
 
     o = s.taboption('control', CBIRpndDiagnostic, '__diagnostic__')
+    o.cfgvalue = cfgvalue
     o.optional = false
-    o.config = config
 
     o = s.taboption('control', CBIRpndIdent, '__ident__')
+    o.cfgvalue = cfgvalue
     o.optional = false
-    o.config = config
+
+    o = s.taboption('chime', CBIRpndChime, '__chime__')
+    o.cfgvalue = cfgvalue
+    o.optional = true
 
     return m.render()
   },

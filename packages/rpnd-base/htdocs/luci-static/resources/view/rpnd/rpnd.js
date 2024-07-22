@@ -1,6 +1,4 @@
 'use strict'
-'require rpc'
-'require uci'
 'require form'
 
 return L.view.extend({

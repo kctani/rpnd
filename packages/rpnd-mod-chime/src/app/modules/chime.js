@@ -3,6 +3,8 @@
  */
 
 const rpnd = require('../rpnd')
+const path = require('node:path')
+
 var exec
 try {
   exec = require('child_process')
@@ -27,7 +29,7 @@ Mchime.uciConfig = (uciConf) => {
       aplay: {
         options: uciConf.chime.aplay_options || ''
       },
-      chimesFolder: __dirname + '/../../chimes/'
+      chimesFolder: path.normalize(__dirname + '/../../chimes/')
     }
     return config
   }

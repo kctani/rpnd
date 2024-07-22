@@ -33,7 +33,7 @@ return L.view.extend({
     o.datatype = 'string'
 
     o = s.option(form.FileUpload, '', _('Upload chime'), _('Upload wav file'))
-    o.root_directory = '/opt/rpnd/app/chimes/'
+    o.root_directory = '/opt/rpnd/chimes/'
     return m.render()
   }
 })
