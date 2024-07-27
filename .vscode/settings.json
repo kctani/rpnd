@@ -1,9 +1,14 @@
 {
   "cSpell.words": [
     "addremove",
+    "amixer",
+    "aplay",
     "cfgvalue",
     "luci",
+    "Mchime",
+    "Midle",
     "Mmqtt",
+    "rmempty",
     "rpnd",
     "taboption"
   ]

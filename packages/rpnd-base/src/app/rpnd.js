@@ -109,7 +109,11 @@ RPND.start = () => {
 	RPND.debug('Mods Loaded', modsLoaded)
 
 	var config = {
-		rpnd: uciConfig.rpnd
+		rpnd: {
+			alias: uciConfig.rpnd.alias,
+			node_id: uciConfig.rpnd.node_id,
+			root_topic: uciConfig.rpnd.root_topic
+		}
 	}
 	config.rpnd.mods_enabled = modsEnabled.join(', ')
 

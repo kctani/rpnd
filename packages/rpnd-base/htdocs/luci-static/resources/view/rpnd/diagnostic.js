@@ -162,28 +162,31 @@ var CBIRpndIdent = form.DummyValue.extend({
 
 var CBIRpndChime = form.DummyValue.extend({
   renderWidget: function (section_id, option_id, cfgvalue) {
-    var table = E('div', {
-      'class': 'sts_object'
+    var table = E('table', {
+      'class': 'table cbi-section-table'
     })
     for (let chime of cfgvalue.chimes) {
       table.appendChild(
-        E('div', {
-          'class': 'cbi-table-row'
+        E('tr', {
+          'class': 'tr cbi-section-table-row'
         }, [
-          E('div', {
-            'class': 'cbi-table-data'
-          }, chime.name),
-          E('input', {
-            'type': 'button',
-            'class': 'cbi-button cbi-button-apply',
-            'value': 'Start',
-            'click': L.ui.createHandlerFn(this,
-              () => {
-                mqttInMsg((cfgvalue.config.chime && cfgvalue.config.chime.ctrlTopic), chime.name)
-              }
-            )
-          })]
-        )
+          E('td', { 'class': 'td cbi-value-field' },
+            chime.name),
+          E('td',
+            { 'class': 'td cbi-value-field' },
+            E('input', {
+              'type': 'button',
+              'class': 'cbi-button cbi-button-apply',
+              'value': 'Play',
+              'click': L.ui.createHandlerFn(this,
+                () => {
+                  mqttInMsg((cfgvalue.config.chime && cfgvalue.config.chime.control_topic), chime.name)
+                }
+              )
+            })
+          )
+        ])
+
       )
     }
     return table
@@ -207,8 +210,10 @@ return L.view.extend({
       }))
     } catch (e) { }
 
-    var m, s, o
-    var cfgvalue = () => { return { config: JSON.parse(args[0]), chimes: args[1] } }
+    var m, s, o,
+    config = JSON.parse(args[0]),
+    chimes = args[1]
+    var cfgvalue = () => { return { config: config, chimes: chimes } }
 
     m = new form.Map('rpnd', _('Diagnostics'), _('IOT module manager'))
 

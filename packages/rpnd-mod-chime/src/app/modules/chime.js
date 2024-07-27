@@ -20,7 +20,7 @@ var config
 Mchime.uciConfig = (uciConf) => {
   if (!uciConf.chime.disabled) {
     config = {
-      ctrlTopic: uciConf.rpnd.root_topic + uciConf.chime.root_topic + '/' + uciConf.chime.ctrl_topic || 'play',
+      control_topic: uciConf.rpnd.root_topic + (uciConf.chime.root_topic ?? 'chime') + '/' + (uciConf.chime.ctrl_topic ?? 'play'),
       volume: uciConf.chime.volume || '50%',
       amixer: {
         card: uciConf.chime.amixer_card || '0',
@@ -29,7 +29,7 @@ Mchime.uciConfig = (uciConf) => {
       aplay: {
         options: uciConf.chime.aplay_options || ''
       },
-      chimesFolder: path.normalize(__dirname + '/../../chimes/')
+      chimes_folder: path.normalize(__dirname + '/../../chimes/')
     }
     return config
   }
@@ -54,13 +54,13 @@ Mchime.run = () => {
       })
     }
     if (cmd.chime !== undefined) {
-      exec('aplay ' + config.aplay.options + ' ' + config.chimesFolder + cmd.chime, (error, stdout, stderr) => {
+      exec('aplay ' + config.aplay.options + ' ' + config.chimes_folder + cmd.chime, (error, stdout, stderr) => {
         rpnd.mqtt.publish(config.ctrlTopic + '/status', stderr || 'ok')
       })
     }
 
   }
-  rpnd.mqtt.subscribe(config.ctrlTopic, play)
+  rpnd.mqtt.subscribe(config.control_topic, play)
 
 }
 

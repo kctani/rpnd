@@ -1,11 +1,12 @@
 'use strict'
 'require form'
+'require fs'
 
 return L.view.extend({
   load: function () {
-
+    return L.resolveDefault(fs.read('/tmp/rpnd/config'), '{"config": "Not Found"}')
   },
-  render: function () {
+  render: function (config) {
 
     try {
       document.head.appendChild(E('link', {
@@ -15,6 +16,8 @@ return L.view.extend({
     } catch (e) { }
 
     var m, s, o
+    config = JSON.parse(config)
+
     m = new form.Map('rpnd', _('Configuration'), _('Play Chimes'))
 
     s = m.section(form.TypedSection, 'chime', _('Chime'))
@@ -31,9 +34,10 @@ return L.view.extend({
     o = s.option(form.Value, 'ctrl_topic', _('Control Topic'), _('Command topic to play chime'))
     o.optional = true
     o.datatype = 'string'
+    o.default = 'play'
 
     o = s.option(form.FileUpload, '', _('Upload chime'), _('Upload wav file'))
-    o.root_directory = '/opt/rpnd/chimes/'
+    o.root_directory = config?.chime?.chimes_folder ?? '/'
     return m.render()
   }
 })
