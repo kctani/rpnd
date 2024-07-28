@@ -162,11 +162,22 @@ var CBIRpndIdent = form.DummyValue.extend({
 
 var CBIRpndChime = form.DummyValue.extend({
   renderWidget: function (section_id, option_id, cfgvalue) {
-    var table = E('table', {
-      'class': 'table cbi-section-table'
+    var volume_value = E('div', { 'class': 'cbi-value-field' }, '30%')
+    var volume_slider = E('input', {
+      'type': 'range', 'class': 'cbi-value-field', 'min': 0, 'max': 100, 'step': 10, 'value': 30, 'change': L.ui.createHandlerFn(this,
+        () => {
+          volume_value.innerText = volume_slider.value + '%'
+        }
+      )
     })
+    var table = [
+      E('tr', { 'class': 'tr cbi-section-table-row' }, [
+        E('td', { 'class': 'td cbi-value-field' }, volume_slider),
+        E('td', { 'class': 'td cbi-value-field' }, volume_value)
+      ])
+    ]
     for (let chime of cfgvalue.chimes) {
-      table.appendChild(
+      table.push(
         E('tr', {
           'class': 'tr cbi-section-table-row'
         }, [
@@ -180,7 +191,8 @@ var CBIRpndChime = form.DummyValue.extend({
               'value': 'Play',
               'click': L.ui.createHandlerFn(this,
                 () => {
-                  mqttInMsg((cfgvalue.config.chime && cfgvalue.config.chime.control_topic), chime.name)
+                  let msg = '{"volume":"' + volume_value.innerText + '","chime":"' + chime.name + '"}'
+                  mqttInMsg((cfgvalue.config.chime && cfgvalue.config.chime.control_topic), msg)
                 }
               )
             })
@@ -189,8 +201,7 @@ var CBIRpndChime = form.DummyValue.extend({
 
       )
     }
-    return table
-
+    return E('table', { 'class': 'table cbi-section-table' }, table)
   }
 })
 
@@ -211,8 +222,8 @@ return L.view.extend({
     } catch (e) { }
 
     var m, s, o,
-    config = JSON.parse(args[0]),
-    chimes = args[1]
+      config = JSON.parse(args[0]),
+      chimes = args[1]
     var cfgvalue = () => { return { config: config, chimes: chimes } }
 
     m = new form.Map('rpnd', _('Diagnostics'), _('IOT module manager'))
@@ -221,18 +232,17 @@ return L.view.extend({
     s.anonymous = true
     s.addremove = false
 
-    s.tab('status', _('Active Status'))
-    s.tab('config', _('Configuration'))
-    s.tab('control', _('Control'))
-    s.tab('chime', _('Chime'))
 
+    s.tab('status', _('Active Status'))
     o = s.taboption('status', CBIRpndStatus, '__status__')
     o.optional = false
 
+    s.tab('config', _('Configuration'))
     o = s.taboption('config', CBIRpndConfig, '__config__')
     o.cfgvalue = cfgvalue
     o.optional = false
 
+    s.tab('control', _('Control'))
     o = s.taboption('control', CBIRpndDiagnostic, '__diagnostic__')
     o.cfgvalue = cfgvalue
     o.optional = false
@@ -241,9 +251,12 @@ return L.view.extend({
     o.cfgvalue = cfgvalue
     o.optional = false
 
-    o = s.taboption('chime', CBIRpndChime, '__chime__')
-    o.cfgvalue = cfgvalue
-    o.optional = true
+    if (config.chime) {
+      s.tab('chime', _('Chime'))
+      o = s.taboption('chime', CBIRpndChime, '__chime__')
+      o.cfgvalue = cfgvalue
+      o.optional = true
+    }
 
     return m.render()
   },

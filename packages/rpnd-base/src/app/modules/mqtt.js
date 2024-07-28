@@ -93,7 +93,7 @@ Mmqtt.run = () => {
 			'encoding': 'utf8'
 		}).split(':')
 		rpnd.debug('mqtt-in-file', msg)
-		if (msg.length === 2) procMsg(msg[0], msg[1])
+		if (msg.length > 1) procMsg(msg[0], msg.slice(1).join(':'))
 		else rpnd.warn('Invalid message in ' + mqttInFilePath)
 	})
 }

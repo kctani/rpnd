@@ -19,7 +19,7 @@ var config
 
 Mchime.uciConfig = (uciConf) => {
   if (!uciConf.chime.disabled) {
-    config = {
+    let config = {
       control_topic: uciConf.rpnd.root_topic + (uciConf.chime.root_topic ?? 'chime') + '/' + (uciConf.chime.ctrl_topic ?? 'play'),
       volume: uciConf.chime.volume || '50%',
       amixer: {
@@ -50,12 +50,12 @@ Mchime.run = () => {
 
     if (cmd.volume !== undefined) {
       exec('amixer -c ' + config.amixer.card + ' sset \'PCM\',' + config.amixer.card + ' ' + cmd.volume, (error, stdout, stderr) => {
-        rpnd.mqtt.publish(config.ctrlTopic + '/status', stderr || 'ok')
+        rpnd.mqtt.publish(config.ctrlTopic + '/result', stderr || 'ok')
       })
     }
     if (cmd.chime !== undefined) {
       exec('aplay ' + config.aplay.options + ' ' + config.chimes_folder + cmd.chime, (error, stdout, stderr) => {
-        rpnd.mqtt.publish(config.ctrlTopic + '/status', stderr || 'ok')
+        rpnd.mqtt.publish(config.ctrlTopic + '/result', stderr || 'ok')
       })
     }
 
