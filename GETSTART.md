@@ -15,24 +15,33 @@ Enter your *WPA passphrase* and select *lan* as your *firewall-zone* click *Save
 Building your own image lets you customize the image for your own needs.
 
 ~~~
-git clone https://github.com/openwrt/openwrt.git openwrt-rpnd
-cd openwrt-rpnd
-git checkout openwrt-19.07
-wget https://raw.githubusercontent.com/kctani/rpnd/master/support/feeds.conf
+git clone https://github.com/openwrt/openwrt.git 
+cd openwrt
+git checkout openwrt-23.05
+
+# Append  "src-git rpnd https://github.com/kctani/rpnd.git"  to feeds.conf
+
 ./scripts/feeds update
 ./scripts/feeds install -a -p packages
 ./scripts/feeds install -a -p luci
 ./scripts/feeds install -a -p rpnd
 rm package/feeds/packages/node* # †
 ./scripts/feeds install -a -p node
-cp feeds/rpnd/support/.config .
-make defconfig
 ~~~
 † See [github.com/nxhack/openwrt-node-packages](https://github.com/nxhack/openwrt-node-packages)
 
 Use `make menuconfig` to display/modify the configuration.
 
 ~~~
+# Select...
+#
+#  Target System (Broadcom BCM27xx)
+#  Subtarget (BCM2708 boards (32 bit))
+#  Target Profile (Raspberry Pi B/B+/CM/Zero/ZeroW) 
+#
+#  Iot-->rpnd-all
+#
+# Exit
 make -j8
 ~~~
 
@@ -41,4 +50,5 @@ Flash the factory image to a micro sd card. and follow instructions *The easy wa
 
 After building and testing your image, run `make menuconfig` to further personalize your image.  
 
+#### Note:
 rpnd uci-defaults appends `dtoverlay=gpio-no-irq` to `/boot/config.txt`,

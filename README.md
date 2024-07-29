@@ -9,7 +9,9 @@ It uses Mqtt to communicate with automation systems. Modules allow control and m
 
 - **Gpio**: input and output
 - **Wire**: One Wire devices
+- **I2c Bus**: I2c devices
 - **Rtl433**: Monitor 433mhz devices.
+- **Chime**: Play a wav file to audio device.
 
 A web based GUI is included to allow configuration and diagnosis of a running device.
 It is distributed as an Openwrt package as well as an Openwrt image.
@@ -25,7 +27,7 @@ The Openwrt distribution aimed at routers and recently iot devices offer two mai
 -   System upgrade for replacing images over the network.
 -   Simplified configuration files with a command line update utility UCI.
 
-Rpnd takes advantage of the Luci web interface
+Rpnd make extensive use of the Luci web interface for it's configuration.
 
 ## NodeJs
 

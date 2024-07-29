@@ -18,8 +18,8 @@ var config
 
 
 Mchime.uciConfig = (uciConf) => {
-  if (!uciConf.chime.disabled) {
-    let config = {
+  if (exec != undefined && !uciConf.chime.disabled) {
+    config = {
       control_topic: uciConf.rpnd.root_topic + (uciConf.chime.root_topic ?? 'chime') + '/' + (uciConf.chime.ctrl_topic ?? 'play'),
       volume: uciConf.chime.volume || '50%',
       amixer: {
