@@ -17,7 +17,7 @@ Building your own image lets you customize the image for your own needs.
 ~~~
 git clone https://github.com/openwrt/openwrt.git 
 cd openwrt
-git checkout openwrt-23.05
+git checkout openwrt-24.10
 
 # Append  "src-git rpnd https://github.com/kctani/rpnd.git"  to feeds.conf
 

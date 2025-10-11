@@ -12,6 +12,7 @@ It uses Mqtt to communicate with automation systems. Modules allow control and m
 - **I2c Bus**: I2c devices
 - **Rtl433**: Monitor 433mhz devices.
 - **Chime**: Play a wav file to audio device.
+- **MyQ**: Emulate myQ remote
 
 A web based GUI is included to allow configuration and diagnosis of a running device.
 It is distributed as an Openwrt package as well as an Openwrt image.
@@ -41,9 +42,13 @@ For a vanilla system simply download the latest image write it to an micro sd ca
 The system will start an access point. Connect to the AP and configure the Wifi to connect to your router.
 Obtain the device ip address. Use it to connect to the configuration interface.
 
+For myQ you will need a transmitter card, fs1000a (from 2$-5$) or similar. Connect vcc to 3.3v (even if it says 5v on the card) and data to a free gpio.
+Add a receiver card RF5V or similar to listen for remotes. 
+Ensure the working frequency is correnct. 315Mhz in North America is common. 
+
 ## Note
 
-Supported on Openwrt release: openwrt-19.07. (possibly on earlier releases with no web ui)
+Supported on Openwrt release: openwrt-24.10. (possibly on earlier releases with no web ui)
 
 ## Guides
 
