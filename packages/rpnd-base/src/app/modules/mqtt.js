@@ -2,7 +2,7 @@
  * http://usejsdoc.org/
  */
 
-const rpnd = require('../rpnd')
+const rpnd = require('rpnd')
 const mqtt = require('mqtt')
 const fs = require('fs')
 
@@ -12,107 +12,115 @@ var client
 var config
 var subscriptions = []
 var status = {
-	'link': 'down',
-	'sent': 0,
-	'received': 0
+  'link': 'down',
+  'sent': 0,
+  'received': 0
 }
 
 function connected() {
-	return client && client.connected
+  return client && client.connected
 }
 
 Mmqtt.uciConfig = (uciConf) => {
-	if (uciConf.mqtt) {
-		config = {
-			url: uciConf.mqtt.url,
-			opts: {
-				username: uciConf.mqtt.username,
-				password: uciConf.mqtt.password,
-				client_id: uciConf.mqtt.client_id || 'rpnd_' + uciConf.rpnd.node_id
-			},
-			status_up: 'UP',
-			status_down: 'DOWN'
-		}
-		if (uciConf.mqtt.status_topic) {
-			config.opts.will = {
-				topic: uciConf.rpnd.root_topic + uciConf.mqtt.status_topic,
-				payload: config.status_down,
-				retain: true
-			}
-		}
-	}
-	return config
+  if (uciConf.mqtt) {
+    config = {
+      url: uciConf.mqtt.url,
+      opts: {
+        username: uciConf.mqtt.username,
+        password: uciConf.mqtt.password,
+        client_id: uciConf.mqtt.client_id || 'rpnd_' + uciConf.rpnd.node_id
+      },
+      status_up: 'UP',
+      status_down: 'DOWN'
+    }
+    if (uciConf.mqtt.status_topic) {
+      config.opts.will = {
+        topic: uciConf.rpnd.root_topic + uciConf.mqtt.status_topic,
+        payload: config.status_down,
+        retain: true
+      }
+    }
+  }
+  return config
 }
 
 Mmqtt.run = () => {
-	rpnd.info('M-Mqtt starting')
-	client = mqtt.connect(config.url, config.opts)
+  rpnd.info('M-Mqtt starting')
+  client = mqtt.connect(config.url, config.opts)
 
-	var procMsg = (topic, payload) => {
-		status.received++
-		subscriptions.forEach((sub) => {
-			if (topic === sub.topic) {
-				sub.listener(topic, payload)
-			}
-		})
-	}
+  var procMsg = (topic, payload) => {
+    status.received++
+    subscriptions.forEach((sub) => {
+      if (topic === sub.topic) {
+        sub.listener(topic, payload)
+      }
+    })
+  }
 
-	client.on('message', procMsg)
+  client.on('message', procMsg)
 
-	client.on('connect', (connack) => {
-		status.link = 'connected'
-		rpnd.info('Mqtt.connected ')
-		if (config.opts.will) {
-			Mmqtt.publish(config.opts.will.topic, config.status_up, {
-				retain: true
-			})
-		}
-		subscriptions.forEach((sub) => {
-			client.subscribe(sub.topic)
-		})
-	})
+  client.on('connect', (connack) => {
+    status.link = 'connected'
+    rpnd.info('Mqtt.connected ')
+    if (config.opts.will) {
+      Mmqtt.publish(config.opts.will.topic, config.status_up, {
+        retain: true
+      })
+    }
+    subscriptions.forEach((sub) => {
+      client.subscribe(sub.topic)
+    })
+  })
 
-	client.on('close', () => {
-		status.link = 'closed'
-		rpnd.info('Mqtt.closed ')
-		if (client.disconnected) {
-			client.reconnect()
-		}
-	})
+  client.on('close', () => {
+    status.link = 'closed'
+    rpnd.info('Mqtt.closed ')
+    setTimeout(() => {
+      if (client && client.disconnected) {
+        client.reconnect()
+      }
+    }, 5000)
+  })
 
-	const mqttInFilePath = '/tmp/rpnd/mqtt-in'
-	fs.writeFileSync(mqttInFilePath, '', {
-		'encoding': 'utf8'
-	})
-	fs.watch(mqttInFilePath, {
-		'persistent': false,
-		'recursive': false,
-		'encoding': 'utf8'
-	}, (event, trigger) => {
-		var msg = fs.readFileSync(mqttInFilePath, {
-			'encoding': 'utf8'
-		}).split(':')
-		rpnd.debug('mqtt-in-file', msg)
-		if (msg.length > 1) procMsg(msg[0], msg.slice(1).join(':'))
-		else rpnd.warn('Invalid message in ' + mqttInFilePath)
-	})
+  const mqttInFilePath = '/tmp/rpnd/mqtt-in'
+  fs.writeFileSync(mqttInFilePath, '', {
+    'encoding': 'utf8'
+  })
+  fs.watch(mqttInFilePath, {
+    'persistent': false,
+    'recursive': false,
+    'encoding': 'utf8'
+  }, (event, trigger) => {
+    var msg = fs.readFileSync(mqttInFilePath, {
+      'encoding': 'utf8'
+    }).split(':')
+    rpnd.debug('mqtt-in-file', msg)
+    if (msg.length > 1) procMsg(msg[0], msg.slice(1).join(':'))
+    else rpnd.warn('Invalid message in ' + mqttInFilePath)
+  })
 }
 
 Mmqtt.subscribe = (topic, listener) => {
-	subscriptions.push({
-		'topic': topic,
-		'listener': listener
-	})
-	if (connected) {
-		client.subscribe(topic)
-	}
+  subscriptions.push({
+    'topic': topic,
+    'listener': listener
+  })
+  if (connected) {
+    client.subscribe(topic)
+  }
 }
 
 Mmqtt.publish = (topic, message, options) => {
-	status.sent++
-	client.publish(topic, message, options || {
-		'retain': false
-	})
+  status.sent++
+  client.publish(topic, message, options || {
+    'retain': false
+  })
+}
+
+Mmqtt.stop = () => {
+  rpnd.info('Mqtt disconnecting')
+  client && client.end(true)
+  client = undefined
 }
 
 Mmqtt.status = status

@@ -2,7 +2,7 @@
  * http://usejsdoc.org/
  */
 
-const rpnd = require('../rpnd')
+const rpnd = require('rpnd')
 const path = require('node:path')
 
 var exec
@@ -24,12 +24,12 @@ Mchime.uciConfig = (uciConf) => {
       volume: uciConf.chime.volume || '50%',
       amixer: {
         card: uciConf.chime.amixer_card || '0',
-        sID: uciConf.chime.amixer_sID || '\'PCM\',0' // not used
+        sID: uciConf.chime.amixer_sID || '\'PCM\',0'
       },
       aplay: {
         options: uciConf.chime.aplay_options || ''
       },
-      chimes_folder: path.normalize(__dirname + '/../../chimes/')
+      chimes_folder: path.normalize(rpnd.appPath + '/../chimes/')
     }
     return config
   }
@@ -49,13 +49,16 @@ Mchime.run = () => {
     rpnd.debugObj('Chime Command', cmd)
 
     if (cmd.volume !== undefined) {
-      exec('amixer -c ' + config.amixer.card + ' sset \'PCM\',' + config.amixer.card + ' ' + cmd.volume, (error, stdout, stderr) => {
+      exec('amixer -c ' + config.amixer.card + ' sset ' + config.amixer.sID + ' ' + cmd.volume, (error, stdout, stderr) => {
         rpnd.mqtt.publish(config.ctrlTopic + '/result', stderr || 'ok')
+        if (stderr) Mchime.status.message = stderr
       })
     }
     if (cmd.chime !== undefined) {
+      Mchime.status.last_chime = cmd
       exec('aplay ' + config.aplay.options + ' ' + config.chimes_folder + cmd.chime, (error, stdout, stderr) => {
         rpnd.mqtt.publish(config.ctrlTopic + '/result', stderr || 'ok')
+        if (stderr) Mchime.status.message = stderr
       })
     }
 
@@ -64,7 +67,11 @@ Mchime.run = () => {
 
 }
 
-Mchime.status = 'Running'
+Mchime.status = {
+  mode: 'Running',
+  last_chime: {},
+  message: ''
+}
 
 Mchime.priority = 60
 

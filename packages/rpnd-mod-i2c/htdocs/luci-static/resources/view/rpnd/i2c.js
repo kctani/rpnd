@@ -20,10 +20,11 @@ return L.view.extend({
     s.anonymous = true
     s.addremove = false
 
-    o = s.option(form.Flag, 'disabled', _('Disabled'), _('Disable Module'))
-
     s.tab('general', _('Device'))
     s.tab('oled', _('Oled'))
+
+    o = s.taboption('general', form.Flag, 'disabled', _('Disabled'), _('Disable Module'))
+    o.default = '1'
 
     o = s.taboption('general', form.Value, 'device_name', _('Device name'), _('Device name without index'))
     o.optional = false

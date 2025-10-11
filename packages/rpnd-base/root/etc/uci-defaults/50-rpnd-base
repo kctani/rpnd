@@ -19,6 +19,12 @@ if [ "$(uci -q get rpnd.@mqtt[0])" = '' ] ; then
 	uci commit
 fi
 
+if [ "$(uci -q get rpnd.@prst[0])" = '' ] ; then
+ 	uci add rpnd prst
+	uci set rpnd.@prst[0].disabled=0
+	uci commit
+fi
+
 if [ "$(uci -q get rpnd.@idle[0])" = '' ] ; then
  	uci add rpnd idle
 	uci set rpnd.@idle[0].disabled=0

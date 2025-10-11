@@ -36,6 +36,21 @@ return L.view.extend({
     o.datatype = 'string'
     o.default = 'play'
 
+    o = s.option(form.Value, 'aplay_options', _('Aplay Options'), _('Options check aplay -h'))
+    o.optional = true
+    o.datatype = 'string'
+    o.default = ''
+
+    o = s.option(form.Value, 'amixer_card', _('Amixer Card'), _('Card number from aplay -l'))
+    o.optional = true
+    o.datatype = 'number'
+    o.default = '0'
+
+    o = s.option(form.Value, 'amixer_sID', _('Amixer sID'), _('Check amixer -c (card from above)'))
+    o.optional = true
+    o.datatype = 'string'
+    o.default = 'PCM,0'
+
     o = s.option(form.FileUpload, '', _('Upload chime'), _('Upload wav file'))
     o.root_directory = config?.chime?.chimes_folder ?? '/'
     return m.render()

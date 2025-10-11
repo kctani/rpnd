@@ -17,12 +17,12 @@ define Package/rpnd-all
 	SECTION:=utils
 	CATEGORY:=IOT
 	TITLE:=RPND all mods
-	DEPENDS:=+rpnd-base +rpnd-mod-chime  +rpnd-mod-gpio +rpnd-mod-i2c +rpnd-mod-rt433  +rpnd-mod-wire
+	DEPENDS:=+rpnd-base +rpnd-mod-chime  +rpnd-mod-gpio +rpnd-mod-i2c +rpnd-mod-rt433  +rpnd-mod-wire +rpnd-mod-myq +openssh-sftp-server +node-rpio +node-onoff
 endef
 
 # Package description; a more verbose description on what our package does
 define Package/rpnd-all/description
-	RPND The whole shebang
+	RPND The whole shebang, plus a few useful tools
 endef
 
 # Package preparation instructions; create the build directory and copy the source code.

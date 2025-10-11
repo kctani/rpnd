@@ -1,0 +1,10 @@
+{
+  "admin/rpnd/myq": {
+    "title": "Myq Remote",
+    "order": 8,
+    "action": {
+      "type": "view",
+      "path": "rpnd/myq"
+    }
+  }
+}

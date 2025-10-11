@@ -26,11 +26,17 @@ return L.view.extend({
     s.anonymous = true
     s.addremove = false
 
-    o = s.option(form.Flag, 'disabled', _('Disabled'), _('Disable Module'))
-
     s.tab('general', _('General Settings'))
     s.tab('tempsensor', _('Temperature sensors'))
     s.tab('zap', _('Wireless Remotes'))
+    s.tab('myq', _('MyQ Remotes'))
+
+    o = s.option(form.Flag, 'disabled', _('Disabled'), _('Disable Module'))
+
+    o = s.taboption('general', form.Flag, "disabled", "Disabled", "Disable Module")
+    o.optional = true
+    o.placeholder = '/dev/xxx'
+    o.datatype = 'string'
 
     o = s.taboption('general', form.Value, "device_path", "Device", "Blank for default device")
     o.optional = true
@@ -41,7 +47,8 @@ return L.view.extend({
     o.value('txr592', 'Acurite tower sensor')
     o.value('ts04', 'HIDEKI TS04 sensor')
     o.value('zap', 'Zap button remote')
-    o.rmempty = false
+    o.value('myq', 'MyQ messages')
+    o.rmempty = true
 
 
     o = s.taboption('tempsensor', form.Value, "txr592_topic", "Topic", "Acurite tower sensor")
@@ -61,8 +68,6 @@ return L.view.extend({
       'protocols_enabled': 'ts04',
       '!contains': 'ts04'
     })
-
-
 
     o = s.taboption('zap', form.Value, "zap_learn_topic", "Learn topic", "Unrecognized code published on this topic")
     o.optional = true
@@ -120,6 +125,16 @@ return L.view.extend({
     so.rmempty = false
     so.sortable = true
 
+    o = s.taboption('zap', form.Value, "zap_learn_topic", "Learn topic", "Unrecognized code published on this topic")
+    o.optional = true
+    o.placeholder = 'learn'
+    o.datatype = 'string'
+    o.anonymous = true
+    o.depends({
+      'protocols_enabled': 'zap',
+      '!contains': 'zap'
+    })
+
     L.Poll.add(L.bind(function () {
       return L.resolveDefault(fs.read('/tmp/rpnd/status'), '').then((code) => {
         try {
@@ -130,6 +145,7 @@ return L.view.extend({
         }
       })
     }, this), pollInterval)
+
 
     return m.render()
   }

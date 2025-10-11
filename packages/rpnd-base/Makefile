@@ -43,8 +43,10 @@ endef
 define Package/rpnd-base/install
 	$(INSTALL_DIR) $(1)/opt/rpnd/app/
 	$(INSTALL_DIR) $(1)/opt/rpnd/app/modules/
+	$(INSTALL_DIR) $(1)/opt/rpnd/prst/
 	$(CP) ./src/app/* $(1)/opt/rpnd/app/
 	$(INSTALL_BIN) ./src/service/start.sh $(1)/opt/rpnd/
+	$(INSTALL_BIN) ./src/service/debug.sh $(1)/opt/rpnd/
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) ./src/service/rpnd $(1)/etc/init.d/
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/

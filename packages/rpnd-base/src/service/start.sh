@@ -13,7 +13,7 @@ start() {
 		echo Launching the rpnd runtime...
 		cd /opt/rpnd
 
-		/usr/bin/node /opt/rpnd/app/rpnd.js &
+		/usr/bin/node /opt/rpnd/app/rpnd_main.js &
 		echo $! > $PIDFILE
 	#fi
 }

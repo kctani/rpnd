@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ "$(uci -q get rpnd.@myq[0])" = '' ] ; then
+	uci add rpnd myq
+ 	uci set rpnd.@myq[0].disabled=1
+ 	uci set rpnd.@myq[0].repeats=4
+	uci commit
+fi
+
+exit 0
